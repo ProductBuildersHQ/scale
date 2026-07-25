@@ -1,0 +1,144 @@
+{
+  "$schema": "https://productbuildershq.com/schema/scale/v0/scale-domain.schema.json",
+  "id": "api",
+  "name": "API Best Practices",
+  "description": "Consistent, machine-validated API design across all services, anchored by api-style-spec: executable style rules, conformance levels, and generated SDKs.",
+  "status": "active",
+  "owner": "api-platform",
+  "narratives": [
+    {
+      "id": "api-thesis",
+      "kind": "thesis",
+      "title": "Why API standardization matters",
+      "body": "Every inconsistent API is a permanent tax: longer reviews, hand-written clients, breaking changes discovered by consumers. An executable style guide (api-style-spec) turns API design from tribal review knowledge into CI-enforced conformance, and conformant OpenAPI unlocks generated SDKs — leverage that compounds with every new service.",
+      "owner": "api-platform",
+      "reviewBy": "2027-01-01"
+    }
+  ],
+  "dimensions": [
+    {
+      "id": "api-lifecycle",
+      "name": "API Lifecycle",
+      "description": "The journey of an API from design through evolution.",
+      "stages": [
+        { "id": "design", "name": "Design", "description": "API design and review against the style guide." },
+        { "id": "development", "name": "Development", "description": "Implementation with linting and OpenAPI validation." },
+        { "id": "publication", "name": "Publication", "description": "Documentation, SDK generation, and catalog listing." },
+        { "id": "consumption", "name": "Consumption", "description": "Client integration and SDK usage." },
+        { "id": "evolution", "name": "Evolution", "description": "Versioning, deprecation, and breaking-change management." }
+      ]
+    }
+  ],
+  "capabilities": [
+    {
+      "id": "api-style-conformance",
+      "name": "API Style Conformance",
+      "description": "Services design and validate APIs against the organization's api-style-spec profile.",
+      "status": "active",
+      "owner": "api-platform",
+      "stages": [
+        { "dimension": "api-lifecycle", "stage": "design" },
+        { "dimension": "api-lifecycle", "stage": "development" }
+      ],
+      "prism": {
+        "maturityDomain": "quality",
+        "levelCriteria": {
+          "M1": "Style guide documented; manual reviews only.",
+          "M2": "OpenAPI required; api-style-spec linting available.",
+          "M3": "CI validation standard across teams; conformance levels tracked.",
+          "M4": "Blocking CI enforcement; >=95% of APIs at silver conformance.",
+          "M5": "AI-assisted design review and automated remediation with measurably better outcomes."
+        }
+      },
+      "metrics": [
+        {
+          "id": "api.standards.rule-coverage",
+          "name": "Style guide rule coverage",
+          "description": "Percentage of API design categories covered by executable rules in the organization's api-style-spec profile, per the api-coverage rubric.",
+          "aspect": "standards",
+          "unit": "percent",
+          "target": { "value": 90, "by": "2026-Q4" },
+          "owner": "api-platform",
+          "source": { "system": "api-style-spec", "ref": "api-coverage.rubric.json" }
+        },
+        {
+          "id": "api.consumption.services-enrolled",
+          "name": "Services enrolled in API linting",
+          "description": "Percentage of API-serving services with api-style-spec linting configured.",
+          "aspect": "consumption",
+          "consumptionKind": "adoption",
+          "unit": "percent",
+          "target": { "value": 95, "by": "2026-Q4" },
+          "owner": "api-platform",
+          "source": { "system": "api-style-spec", "ref": "repo-config-inventory" }
+        },
+        {
+          "id": "api.consumption.silver-pass-rate",
+          "name": "APIs passing silver conformance",
+          "description": "Percentage of linted APIs that pass the silver conformance level. Adoption says the linter is installed; this says the APIs actually conform.",
+          "aspect": "consumption",
+          "consumptionKind": "conformance",
+          "unit": "percent",
+          "target": { "value": 90, "by": "2027-Q2" },
+          "owner": "api-platform",
+          "source": { "system": "api-style-spec", "ref": "lint-report.conformance_level" }
+        },
+        {
+          "id": "api.automation.ci-blocking",
+          "name": "APIs with blocking CI validation",
+          "description": "Percentage of API repositories where style validation blocks merge rather than warning.",
+          "aspect": "automation",
+          "unit": "percent",
+          "target": { "value": 80, "by": "2027-Q2" },
+          "owner": "api-platform",
+          "source": { "system": "ci", "ref": "pipeline-config" }
+        },
+        {
+          "id": "api.leverage.generated-sdks",
+          "name": "Client SDKs generated from OpenAPI",
+          "description": "Percentage of client SDKs generated from conformant OpenAPI rather than hand-written.",
+          "aspect": "leverage",
+          "unit": "percent",
+          "target": { "value": 75, "by": "2027-Q2" },
+          "owner": "api-platform",
+          "source": { "system": "api-style-spec", "ref": "sdk-generation" }
+        },
+        {
+          "id": "api.effectiveness.breaking-changes",
+          "name": "Unplanned breaking changes per quarter",
+          "description": "Count of consumer-reported breaking API changes that were not part of a planned deprecation.",
+          "aspect": "effectiveness",
+          "unit": "count",
+          "direction": "lower_is_better",
+          "target": { "value": 2, "by": "2027-Q2" },
+          "owner": "api-platform",
+          "source": { "system": "incident-tracker", "ref": "label:api-breaking-change" }
+        }
+      ]
+    },
+    {
+      "id": "openapi-quality",
+      "name": "OpenAPI Quality",
+      "description": "OpenAPI documents are complete enough to drive documentation, validation, and SDK generation.",
+      "status": "active",
+      "owner": "api-platform",
+      "stages": [
+        { "dimension": "api-lifecycle", "stage": "development" },
+        { "dimension": "api-lifecycle", "stage": "publication" }
+      ],
+      "metrics": [
+        {
+          "id": "api.consumption.openapi-completeness",
+          "name": "OpenAPI completeness score",
+          "description": "Mean completeness score of OpenAPI documents (descriptions, examples, schemas) per the style-guide-quality rubric.",
+          "aspect": "consumption",
+          "consumptionKind": "conformance",
+          "unit": "score",
+          "target": { "value": 85, "by": "2027-Q2" },
+          "owner": "api-platform",
+          "source": { "system": "api-style-spec", "ref": "style-guide-quality.rubric.json" }
+        }
+      ]
+    }
+  ]
+}

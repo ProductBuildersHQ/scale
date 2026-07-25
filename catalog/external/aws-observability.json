@@ -1,0 +1,41 @@
+{
+  "$schema": "https://productbuildershq.com/schema/scale/v0/scale-external-model.schema.json",
+  "id": "aws-observability-maturity",
+  "name": "AWS Observability Maturity Model",
+  "publisher": "AWS",
+  "domain": "observability",
+  "description": "AWS's four-stage observability maturity model from the AWS Observability Best Practices guide. Levels are the source's own; the PRISM crosswalk is an explicit SCALE mapping, not part of the AWS model.",
+  "sourceUrl": "https://aws-observability.github.io/observability-best-practices/guides/observability-maturity-model/",
+  "retrievedAt": "2026-07-21",
+  "interpretation": "normalized",
+  "levels": [
+    {
+      "id": "foundational",
+      "ordinal": 1,
+      "name": "Foundational monitoring",
+      "description": "Basic monitoring exists in inconsistent forms across teams; no defined strategy for a complete view of applications across the organization.",
+      "prismLevel": 2
+    },
+    {
+      "id": "intermediate",
+      "ordinal": 2,
+      "name": "Intermediate monitoring",
+      "description": "More sophisticated practices adopted: proactive alerting and distributed tracing provide insight into interactions between systems.",
+      "prismLevel": 3
+    },
+    {
+      "id": "advanced",
+      "ordinal": 3,
+      "name": "Advanced observability",
+      "description": "Automated remediation plus AI/ML-driven anomaly detection and root-cause analysis enable corrective action before end-user impact.",
+      "prismLevel": 4
+    },
+    {
+      "id": "proactive",
+      "ordinal": 4,
+      "name": "Proactive observability",
+      "description": "Proactive and predictive observability practices with advanced automation.",
+      "prismLevel": 5
+    }
+  ]
+}

@@ -1,0 +1,141 @@
+{
+  "$schema": "https://productbuildershq.com/schema/scale/v0/scale-domain.schema.json",
+  "id": "security",
+  "name": "Security Best Practices",
+  "description": "AI-era application security platformized across the delivery lifecycle: from AI threat modeling at design time to an AI-augmented SOC in operations.",
+  "status": "draft",
+  "owner": "security-engineering",
+  "narratives": [
+    {
+      "id": "security-thesis",
+      "kind": "thesis",
+      "title": "The AI-era security story",
+      "body": "Compliance frameworks like NIST CSF tell the auditor's story. This dimension tells the transformation story: security is shifting from human gatekeeping at a few chokepoints to AI-native practice at every lifecycle stage — AI threat modeling in design, defensive hygiene in development, automated posture in the pipeline, AI pentesting and red teams for offensive validation, and an AI-augmented SOC/CSIRT/PSIRT in operations. The maturity of each stage, read left to right, is the journey.",
+      "owner": "security-engineering",
+      "reviewBy": "2027-01-01"
+    }
+  ],
+  "dimensions": [
+    {
+      "id": "security-lifecycle",
+      "name": "Security Lifecycle",
+      "description": "AI-native security across the software delivery lifecycle.",
+      "stages": [
+        {
+          "id": "design-planning",
+          "name": "Design & Planning",
+          "description": "AI Threat Modeling: architecture reviews, security requirements, and risk analysis at design time.",
+          "narratives": [
+            {
+              "id": "security-stage-design-thesis",
+              "kind": "thesis",
+              "body": "Threat modeling has historically been rationed — a scarce expert activity reserved for critical systems. AI collapses its cost, so every service can have a current threat model. The measure of this stage is coverage: threat modeling as a default, not an exception.",
+              "owner": "security-engineering",
+              "reviewBy": "2027-01-01"
+            }
+          ]
+        },
+        {
+          "id": "development",
+          "name": "Development",
+          "description": "Defensive Hygiene: secure coding, dependency management, and secrets management during implementation."
+        },
+        {
+          "id": "cicd-pipeline",
+          "name": "CI/CD Pipeline",
+          "description": "Automated Posture: SAST, SCA, secrets detection, SBOM generation, and policy enforcement in the pipeline."
+        },
+        {
+          "id": "offensive-validation",
+          "name": "Offensive Validation",
+          "description": "AI Pentesting & Red Teams: adversary simulation and validation exercises, augmented and scaled by AI."
+        },
+        {
+          "id": "operations",
+          "name": "Operations",
+          "description": "AI SOC / CSIRT / PSIRT: AI-augmented detection, incident response, and product security response."
+        }
+      ]
+    }
+  ],
+  "capabilities": [
+    {
+      "id": "ai-threat-modeling",
+      "name": "AI Threat Modeling",
+      "description": "Services carry current, AI-assisted threat models reviewed at design time.",
+      "status": "draft",
+      "owner": "security-engineering",
+      "stages": [
+        { "dimension": "security-lifecycle", "stage": "design-planning" }
+      ],
+      "frameworks": [
+        { "framework": "NIST_CSF_2", "controls": ["ID.RA"], "description": "Risk assessment." }
+      ],
+      "metrics": [
+        {
+          "id": "sec.consumption.threat-model-coverage",
+          "name": "Services with current threat models",
+          "description": "Percentage of production services with a threat model updated within the last two quarters.",
+          "aspect": "consumption",
+          "consumptionKind": "adoption",
+          "unit": "percent",
+          "target": { "value": 80, "by": "2027-Q2" },
+          "owner": "security-engineering",
+          "source": { "system": "threat-model-registry", "ref": "freshness-check" }
+        }
+      ]
+    },
+    {
+      "id": "automated-posture",
+      "name": "Automated Pipeline Posture",
+      "description": "Security scanning (SAST, SCA, secrets) runs and blocks in every delivery pipeline.",
+      "status": "draft",
+      "owner": "security-engineering",
+      "stages": [
+        { "dimension": "security-lifecycle", "stage": "cicd-pipeline" }
+      ],
+      "frameworks": [
+        { "framework": "NIST_CSF_2", "controls": ["PR.PS"], "description": "Platform security." },
+        { "framework": "OWASP", "description": "OWASP ASVS verification via pipeline automation." }
+      ],
+      "metrics": [
+        {
+          "id": "sec.automation.pipeline-gates",
+          "name": "Pipelines with blocking security gates",
+          "description": "Percentage of delivery pipelines where SAST, SCA, and secrets detection run as blocking gates.",
+          "aspect": "automation",
+          "unit": "percent",
+          "target": { "value": 90, "by": "2027-Q2" },
+          "owner": "security-engineering",
+          "source": { "system": "ci", "ref": "pipeline-config" }
+        }
+      ]
+    },
+    {
+      "id": "ai-security-operations",
+      "name": "AI Security Operations",
+      "description": "AI-augmented SOC, CSIRT, and PSIRT: triage, enrichment, and response assisted by AI agents.",
+      "status": "draft",
+      "owner": "security-engineering",
+      "stages": [
+        { "dimension": "security-lifecycle", "stage": "operations" }
+      ],
+      "frameworks": [
+        { "framework": "NIST_CSF_2", "controls": ["DE", "RS"], "description": "Detect and Respond functions." }
+      ],
+      "metrics": [
+        {
+          "id": "sec.effectiveness.incident-mttr",
+          "name": "Security incident mean time to restore",
+          "description": "Mean time to contain and restore for security incidents, in hours.",
+          "aspect": "effectiveness",
+          "unit": "hours",
+          "direction": "lower_is_better",
+          "target": { "value": 24, "by": "2027-Q2" },
+          "owner": "security-engineering",
+          "source": { "system": "incident-tracker", "ref": "security-mttr" }
+        }
+      ]
+    }
+  ]
+}

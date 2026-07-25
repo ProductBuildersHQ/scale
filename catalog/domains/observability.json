@@ -1,0 +1,166 @@
+{
+  "$schema": "https://productbuildershq.com/schema/scale/v0/scale-domain.schema.json",
+  "id": "observability",
+  "name": "Observability Best Practices",
+  "description": "Every service emits standardized telemetry — OpenTelemetry/Prometheus with Golden Signals and RED/USE coverage — and that telemetry is demonstrably good enough to run the business on.",
+  "status": "active",
+  "owner": "observability-platform",
+  "narratives": [
+    {
+      "id": "observability-thesis",
+      "kind": "thesis",
+      "title": "Why observability standardization matters",
+      "body": "Installing a telemetry SDK is not observability. The journey is adoption (SDK installed), conformance (Golden Signals and RED/USE actually emitted with correct semantic conventions), and effectiveness (the signals are good enough that incidents are detected by alerts, not by customers). Standardized telemetry also creates leverage: shared dashboards and alert templates that every service inherits instead of rebuilding.",
+      "owner": "observability-platform",
+      "reviewBy": "2027-01-01"
+    }
+  ],
+  "dimensions": [
+    {
+      "id": "telemetry-lifecycle",
+      "name": "Telemetry Lifecycle",
+      "description": "The journey of telemetry from instrumentation to optimization.",
+      "stages": [
+        { "id": "instrumentation", "name": "Instrumentation", "description": "SDKs installed and signals emitted." },
+        { "id": "collection", "name": "Collection", "description": "Pipelines, storage, and semantic-convention conformance." },
+        { "id": "analysis", "name": "Analysis", "description": "Dashboards and service-level indicators." },
+        { "id": "alerting", "name": "Alerting", "description": "Actionable alerts tied to SLOs." },
+        { "id": "optimization", "name": "Optimization", "description": "Cost, cardinality, and signal-quality tuning." }
+      ]
+    }
+  ],
+  "capabilities": [
+    {
+      "id": "otel-instrumentation",
+      "name": "OpenTelemetry Instrumentation",
+      "description": "Services are instrumented with OpenTelemetry (or Prometheus exporters) and emit the Four Golden Signals.",
+      "status": "active",
+      "owner": "observability-platform",
+      "stages": [
+        { "dimension": "telemetry-lifecycle", "stage": "instrumentation" },
+        { "dimension": "telemetry-lifecycle", "stage": "collection" }
+      ],
+      "frameworks": [
+        { "framework": "SRE", "description": "Golden Signals per the Google SRE book." },
+        { "framework": "aws-observability-maturity", "reference": "intermediate", "description": "Current practice: distributed tracing and proactive alerting place us at Stage 2 of 4; Stage 3 requires AI/ML anomaly detection and automated remediation." },
+        { "framework": "newrelic-observability-maturity", "reference": "reactive", "description": "Foundation in place; value-driver practices are still largely reactive." }
+      ],
+      "prism": {
+        "maturityDomain": "operations",
+        "levelCriteria": {
+          "M1": "Ad-hoc logging; no standard telemetry.",
+          "M2": "OTel SDK available; some services instrumented.",
+          "M3": "Telemetry profile published; majority of services emitting Golden Signals.",
+          "M4": "Conformance validated automatically; >=90% services conformant.",
+          "M5": "Auto-instrumentation by default with predictive signal-quality analysis."
+        }
+      },
+      "metrics": [
+        {
+          "id": "obs.standards.profile-coverage",
+          "name": "Telemetry profile coverage",
+          "description": "Percentage of service archetypes with a published telemetry profile (required signals, semantic conventions).",
+          "aspect": "standards",
+          "unit": "percent",
+          "target": { "value": 90, "by": "2026-Q4" },
+          "owner": "observability-platform",
+          "source": { "system": "observability-profiles", "ref": "profile-inventory" }
+        },
+        {
+          "id": "obs.consumption.otel-adoption",
+          "name": "Services with OTel SDK",
+          "description": "Percentage of production services with the OpenTelemetry SDK (or Prometheus exporter) installed.",
+          "aspect": "consumption",
+          "consumptionKind": "adoption",
+          "unit": "percent",
+          "target": { "value": 95, "by": "2026-Q4" },
+          "owner": "observability-platform",
+          "source": { "system": "service-inventory", "ref": "dependency-scan" }
+        },
+        {
+          "id": "obs.consumption.golden-signals",
+          "name": "Services emitting Golden Signals",
+          "description": "Percentage of instrumented services actually emitting latency, traffic, errors, and saturation per the telemetry profile. Installation is adoption; emission is conformance.",
+          "aspect": "consumption",
+          "consumptionKind": "conformance",
+          "unit": "percent",
+          "target": { "value": 90, "by": "2027-Q2" },
+          "owner": "observability-platform",
+          "source": { "system": "telemetry-backend", "ref": "signal-presence-check" }
+        },
+        {
+          "id": "obs.automation.auto-instrumentation",
+          "name": "Services using auto-instrumentation",
+          "description": "Percentage of instrumented services using auto-instrumentation rather than hand-written spans for baseline signals.",
+          "aspect": "automation",
+          "unit": "percent",
+          "target": { "value": 70, "by": "2027-Q2" },
+          "owner": "observability-platform",
+          "source": { "system": "service-inventory", "ref": "instrumentation-mode" }
+        },
+        {
+          "id": "obs.leverage.template-dashboards",
+          "name": "Dashboards from shared templates",
+          "description": "Percentage of service dashboards generated from shared templates rather than built per-service.",
+          "aspect": "leverage",
+          "unit": "percent",
+          "target": { "value": 80, "by": "2027-Q2" },
+          "owner": "observability-platform",
+          "source": { "system": "dashboards", "ref": "template-provenance" }
+        },
+        {
+          "id": "obs.effectiveness.mttr",
+          "name": "Mean time to restore",
+          "description": "Mean time to restore service for production incidents, in minutes.",
+          "aspect": "effectiveness",
+          "unit": "minutes",
+          "direction": "lower_is_better",
+          "target": { "value": 60, "by": "2027-Q2" },
+          "owner": "observability-platform",
+          "source": { "system": "incident-tracker", "ref": "mttr" },
+          "frameworks": [
+            { "framework": "DORA", "reference": "time-to-restore", "description": "DORA Time to Restore Service." }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "red-use-methodology",
+      "name": "RED/USE Methodology",
+      "description": "Request-serving services expose RED metrics (rate, errors, duration); infrastructure exposes USE metrics (utilization, saturation, errors).",
+      "status": "active",
+      "owner": "observability-platform",
+      "stages": [
+        { "dimension": "telemetry-lifecycle", "stage": "analysis" },
+        { "dimension": "telemetry-lifecycle", "stage": "alerting" }
+      ],
+      "frameworks": [
+        { "framework": "aws-observability-maturity", "reference": "intermediate", "description": "RED/USE dashboards and alerting correspond to Stage 2 practice." },
+        { "framework": "newrelic-observability-maturity", "reference": "proactive", "description": "Alert-first incident detection is proactive-level practice for the uptime value driver." }
+      ],
+      "metrics": [
+        {
+          "id": "obs.consumption.red-coverage",
+          "name": "Request-serving services with RED metrics",
+          "description": "Percentage of request-serving services exposing rate, errors, and duration metrics per the profile.",
+          "aspect": "consumption",
+          "consumptionKind": "conformance",
+          "unit": "percent",
+          "target": { "value": 90, "by": "2027-Q2" },
+          "owner": "observability-platform",
+          "source": { "system": "telemetry-backend", "ref": "red-presence-check" }
+        },
+        {
+          "id": "obs.effectiveness.alert-detection",
+          "name": "Incidents detected by alerts",
+          "description": "Percentage of production incidents detected by alerting before a customer or engineer report — the test of whether the telemetry is actually good.",
+          "aspect": "effectiveness",
+          "unit": "percent",
+          "target": { "value": 85, "by": "2027-Q2" },
+          "owner": "observability-platform",
+          "source": { "system": "incident-tracker", "ref": "detection-source" }
+        }
+      ]
+    }
+  ]
+}

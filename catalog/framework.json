@@ -1,0 +1,19 @@
+{
+  "$schema": "https://productbuildershq.com/schema/scale/v0/scale-framework.schema.json",
+  "id": "scale",
+  "name": "SCALE",
+  "description": "SCALE measures how engineering best practices are Standardized, Consumed, Automated, Leveraged, and made Effective across an organization. It is the narrative layer over detailed maturity metrics: its purpose is to make hundreds of metrics readable as a small number of aspect-level storylines.",
+  "version": "0.1.0",
+  "owner": "platform-engineering",
+  "updated": "2026-07-21",
+  "narratives": [
+    {
+      "id": "scale-thesis",
+      "kind": "thesis",
+      "title": "Why SCALE exists",
+      "body": "Maturity frameworks make it cheap to generate hundreds of metrics, and cheap metrics destroy the story. Leadership cannot act on \"maturity level 3 became level 4\" repeated three hundred times. SCALE organizes every metric under one of five aspects — Standards, Consumption, Automation, Leverage, Effectiveness — so the platform story can be told in five sentences, each backed by drill-down evidence. Domain dimensions (ordered lifecycles) provide each discipline's own story spine, orthogonal to the horizontal aspect view.",
+      "owner": "platform-engineering",
+      "reviewBy": "2027-01-01"
+    }
+  ]
+}

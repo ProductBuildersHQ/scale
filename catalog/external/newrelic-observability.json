@@ -1,0 +1,41 @@
+{
+  "$schema": "https://productbuildershq.com/schema/scale/v0/scale-external-model.schema.json",
+  "id": "newrelic-observability-maturity",
+  "name": "New Relic Observability Maturity",
+  "publisher": "New Relic",
+  "domain": "observability",
+  "description": "New Relic's observability maturity series organizes practice by value drivers (intelligent observability as the Level 0 foundation, then business uptime, digital experience, engineering excellence), each progressing reactive → proactive → mastery. This codification normalizes that structure onto a single ladder; the source organizes by value driver, and the PRISM crosswalk is an explicit SCALE mapping, not part of the New Relic model. Note: New Relic documentation content is published under CC BY-NC-SA — this file intentionally carries only level structure and short paraphrases with attribution.",
+  "sourceUrl": "https://docs.newrelic.com/docs/new-relic-solutions/observability-maturity/introduction/",
+  "retrievedAt": "2026-07-21",
+  "interpretation": "normalized",
+  "levels": [
+    {
+      "id": "foundation",
+      "ordinal": 0,
+      "name": "Level 0 — Intelligent observability foundation",
+      "description": "The essential foundation (instrumentation and platform capability) that enables all other observability value drivers.",
+      "prismLevel": 2
+    },
+    {
+      "id": "reactive",
+      "ordinal": 1,
+      "name": "Reactive",
+      "description": "Value-driver practices applied reactively — responding to problems after they surface.",
+      "prismLevel": 3
+    },
+    {
+      "id": "proactive",
+      "ordinal": 2,
+      "name": "Proactive",
+      "description": "Practices applied proactively — anticipating and preventing problems.",
+      "prismLevel": 4
+    },
+    {
+      "id": "mastery",
+      "ordinal": 3,
+      "name": "Mastery",
+      "description": "Mature, continuously improving practice tied to measurable business value.",
+      "prismLevel": 5
+    }
+  ]
+}
