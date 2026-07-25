@@ -1,0 +1,144 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://productbuildershq.com/schema/scale/v0/scale-assessment.schema.json",
+  "$defs": {
+    "NarrativeBlock": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "thesis",
+            "journey",
+            "outlook"
+          ]
+        },
+        "scope": {
+          "$ref": "#/$defs/NarrativeScope"
+        },
+        "title": {
+          "type": "string"
+        },
+        "body": {
+          "type": "string",
+          "description": "Markdown narrative text"
+        },
+        "initiatives": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array",
+          "description": "prism-roadmap initiative IDs this narrative references"
+        },
+        "owner": {
+          "type": "string"
+        },
+        "asOf": {
+          "type": "string",
+          "description": "Period anchor for journey/outlook blocks (RFC 3339 date or period like 2026-Q3)"
+        },
+        "reviewBy": {
+          "type": "string",
+          "description": "Date by which a thesis block should be re-reviewed"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "required": [
+        "id",
+        "kind",
+        "body"
+      ]
+    },
+    "NarrativeScope": {
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "framework",
+            "domain",
+            "dimension",
+            "stage",
+            "capability",
+            "metric"
+          ]
+        },
+        "ref": {
+          "type": "string",
+          "description": "ID of the referenced element"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "required": [
+        "type",
+        "ref"
+      ]
+    },
+    "Observation": {
+      "properties": {
+        "metricId": {
+          "type": "string"
+        },
+        "value": {
+          "type": "number"
+        },
+        "numerator": {
+          "type": "integer"
+        },
+        "denominator": {
+          "type": "integer"
+        },
+        "asOf": {
+          "type": "string"
+        },
+        "note": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "required": [
+        "metricId",
+        "value"
+      ]
+    }
+  },
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "frameworkId": {
+      "type": "string"
+    },
+    "period": {
+      "type": "string",
+      "description": "Reporting period"
+    },
+    "asOf": {
+      "type": "string",
+      "description": "RFC 3339 date the observations were taken"
+    },
+    "observations": {
+      "items": {
+        "$ref": "#/$defs/Observation"
+      },
+      "type": "array"
+    },
+    "narratives": {
+      "items": {
+        "$ref": "#/$defs/NarrativeBlock"
+      },
+      "type": "array",
+      "description": "Journey and outlook blocks for this period; use scope to anchor each block to a framework element"
+    }
+  },
+  "additionalProperties": false,
+  "type": "object",
+  "required": [
+    "frameworkId",
+    "period"
+  ]
+}

@@ -1,0 +1,461 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://productbuildershq.com/schema/scale/v0/scale-domain.schema.json",
+  "$defs": {
+    "Capability": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "draft",
+            "active",
+            "deprecated"
+          ]
+        },
+        "owner": {
+          "type": "string"
+        },
+        "stages": {
+          "items": {
+            "$ref": "#/$defs/StageRef"
+          },
+          "type": "array",
+          "description": "Positions of this capability on the domain's lifecycle dimension(s)"
+        },
+        "metrics": {
+          "items": {
+            "$ref": "#/$defs/Metric"
+          },
+          "type": "array"
+        },
+        "frameworks": {
+          "items": {
+            "$ref": "#/$defs/FrameworkMapping"
+          },
+          "type": "array"
+        },
+        "prism": {
+          "$ref": "#/$defs/PRISMRef"
+        },
+        "narratives": {
+          "items": {
+            "$ref": "#/$defs/NarrativeBlock"
+          },
+          "type": "array"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "required": [
+        "id",
+        "name"
+      ]
+    },
+    "DomainDimension": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "stages": {
+          "items": {
+            "$ref": "#/$defs/Stage"
+          },
+          "type": "array"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "stages"
+      ]
+    },
+    "FrameworkMapping": {
+      "properties": {
+        "framework": {
+          "type": "string"
+        },
+        "reference": {
+          "type": "string"
+        },
+        "controls": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "description": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "MaturityLadder": {
+      "properties": {
+        "levels": {
+          "items": {
+            "$ref": "#/$defs/MaturityRung"
+          },
+          "type": "array"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "required": [
+        "levels"
+      ]
+    },
+    "MaturityRung": {
+      "properties": {
+        "level": {
+          "type": "integer",
+          "description": "PRISM maturity level 1-5"
+        },
+        "name": {
+          "type": "string"
+        },
+        "threshold": {
+          "type": "number",
+          "description": "Observed-value threshold (\u003e= for higher-is-better"
+        },
+        "exclusive": {
+          "type": "boolean",
+          "description": "Strict comparison (\u003e or \u003c) instead of \u003e= / \u003c=; use with threshold 0 to express '\u003e0%'"
+        },
+        "description": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "required": [
+        "level",
+        "name"
+      ]
+    },
+    "Metric": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "aspect": {
+          "type": "string",
+          "enum": [
+            "standards",
+            "consumption",
+            "automation",
+            "leverage",
+            "effectiveness"
+          ]
+        },
+        "consumptionKind": {
+          "type": "string",
+          "enum": [
+            "adoption",
+            "conformance"
+          ],
+          "description": "Required when aspect is consumption; distinguishes 'using it' from 'using it correctly'"
+        },
+        "unit": {
+          "type": "string"
+        },
+        "direction": {
+          "type": "string",
+          "enum": [
+            "higher_is_better",
+            "lower_is_better"
+          ],
+          "description": "Defaults to higher_is_better"
+        },
+        "target": {
+          "$ref": "#/$defs/Target"
+        },
+        "maturity": {
+          "$ref": "#/$defs/MaturityLadder",
+          "description": "Optional ladder mapping observed values to PRISM maturity levels"
+        },
+        "owner": {
+          "type": "string"
+        },
+        "source": {
+          "$ref": "#/$defs/Source"
+        },
+        "frameworks": {
+          "items": {
+            "$ref": "#/$defs/FrameworkMapping"
+          },
+          "type": "array"
+        },
+        "tags": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "aspect"
+      ]
+    },
+    "NarrativeBlock": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "thesis",
+            "journey",
+            "outlook"
+          ]
+        },
+        "scope": {
+          "$ref": "#/$defs/NarrativeScope"
+        },
+        "title": {
+          "type": "string"
+        },
+        "body": {
+          "type": "string",
+          "description": "Markdown narrative text"
+        },
+        "initiatives": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array",
+          "description": "prism-roadmap initiative IDs this narrative references"
+        },
+        "owner": {
+          "type": "string"
+        },
+        "asOf": {
+          "type": "string",
+          "description": "Period anchor for journey/outlook blocks (RFC 3339 date or period like 2026-Q3)"
+        },
+        "reviewBy": {
+          "type": "string",
+          "description": "Date by which a thesis block should be re-reviewed"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "required": [
+        "id",
+        "kind",
+        "body"
+      ]
+    },
+    "NarrativeScope": {
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "framework",
+            "domain",
+            "dimension",
+            "stage",
+            "capability",
+            "metric"
+          ]
+        },
+        "ref": {
+          "type": "string",
+          "description": "ID of the referenced element"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "required": [
+        "type",
+        "ref"
+      ]
+    },
+    "PRISMRef": {
+      "properties": {
+        "capabilityId": {
+          "type": "string",
+          "description": "prism-capability capability ID"
+        },
+        "maturityDomain": {
+          "type": "string",
+          "description": "prism-maturity domain"
+        },
+        "sliIds": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "levelCriteria": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "type": "object",
+          "description": "Expected evidence per maturity level"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "Source": {
+      "properties": {
+        "system": {
+          "type": "string",
+          "description": "Producing system"
+        },
+        "ref": {
+          "type": "string",
+          "description": "Locator within the system"
+        },
+        "description": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "required": [
+        "system"
+      ]
+    },
+    "Stage": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "narratives": {
+          "items": {
+            "$ref": "#/$defs/NarrativeBlock"
+          },
+          "type": "array"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "required": [
+        "id",
+        "name"
+      ]
+    },
+    "StageRef": {
+      "properties": {
+        "dimension": {
+          "type": "string",
+          "description": "DomainDimension ID"
+        },
+        "stage": {
+          "type": "string",
+          "description": "Stage ID within the dimension"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "required": [
+        "dimension",
+        "stage"
+      ]
+    },
+    "Target": {
+      "properties": {
+        "value": {
+          "type": "number"
+        },
+        "by": {
+          "type": "string",
+          "description": "Date or period the target should be reached (e.g. 2026-Q4)"
+        },
+        "description": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "required": [
+        "value"
+      ]
+    }
+  },
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "active",
+        "deprecated"
+      ]
+    },
+    "owner": {
+      "type": "string"
+    },
+    "dimensions": {
+      "items": {
+        "$ref": "#/$defs/DomainDimension"
+      },
+      "type": "array"
+    },
+    "capabilities": {
+      "items": {
+        "$ref": "#/$defs/Capability"
+      },
+      "type": "array"
+    },
+    "narratives": {
+      "items": {
+        "$ref": "#/$defs/NarrativeBlock"
+      },
+      "type": "array"
+    }
+  },
+  "additionalProperties": false,
+  "type": "object",
+  "required": [
+    "id",
+    "name"
+  ]
+}

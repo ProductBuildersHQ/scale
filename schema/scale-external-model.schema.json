@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://productbuildershq.com/schema/scale/v0/scale-external-model.schema.json",
+  "$defs": {
+    "ExternalLevel": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "ordinal": {
+          "type": "integer",
+          "description": "The source's own level number"
+        },
+        "name": {
+          "type": "string",
+          "description": "The source's own level label"
+        },
+        "description": {
+          "type": "string"
+        },
+        "prismLevel": {
+          "type": "integer",
+          "description": "Explicit crosswalk to PRISM maturity (1-5); 0 means unmapped"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "required": [
+        "id",
+        "ordinal",
+        "name"
+      ]
+    }
+  },
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "publisher": {
+      "type": "string"
+    },
+    "domain": {
+      "type": "string",
+      "description": "SCALE domain ID this model maps to"
+    },
+    "description": {
+      "type": "string"
+    },
+    "sourceUrl": {
+      "type": "string"
+    },
+    "retrievedAt": {
+      "type": "string",
+      "description": "Date the source was last checked"
+    },
+    "interpretation": {
+      "type": "string",
+      "enum": [
+        "direct",
+        "normalized",
+        "inferred"
+      ]
+    },
+    "levels": {
+      "items": {
+        "$ref": "#/$defs/ExternalLevel"
+      },
+      "type": "array"
+    }
+  },
+  "additionalProperties": false,
+  "type": "object",
+  "required": [
+    "id",
+    "name",
+    "publisher",
+    "levels"
+  ]
+}
