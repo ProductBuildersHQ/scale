@@ -1,5 +1,30 @@
 # SCALE
 
+[![Go CI][go-ci-svg]][go-ci-url]
+[![Go Lint][go-lint-svg]][go-lint-url]
+[![Go SAST][go-sast-svg]][go-sast-url]
+[![Docs][docs-godoc-svg]][docs-godoc-url]
+[![Docs][docs-mkdoc-svg]][docs-mkdoc-url]
+[![Visualization][viz-svg]][viz-url]
+[![License][license-svg]][license-url]
+
+ [go-ci-svg]: https://github.com/ProductBuildersHQ/scale/actions/workflows/go-ci.yaml/badge.svg?branch=main
+ [go-ci-url]: https://github.com/ProductBuildersHQ/scale/actions/workflows/go-ci.yaml
+ [go-lint-svg]: https://github.com/ProductBuildersHQ/scale/actions/workflows/go-lint.yaml/badge.svg?branch=main
+ [go-lint-url]: https://github.com/ProductBuildersHQ/scale/actions/workflows/go-lint.yaml
+ [go-sast-svg]: https://github.com/ProductBuildersHQ/scale/actions/workflows/go-sast-codeql.yaml/badge.svg?branch=main
+ [go-sast-url]: https://github.com/ProductBuildersHQ/scale/actions/workflows/go-sast-codeql.yaml
+ [docs-godoc-svg]: https://pkg.go.dev/badge/github.com/ProductBuildersHQ/scale
+ [docs-godoc-url]: https://pkg.go.dev/github.com/ProductBuildersHQ/scale
+ [docs-mkdoc-svg]: https://img.shields.io/badge/Go-dev%20guide-blue.svg
+ [docs-mkdoc-url]: https://productbuildershq.com/scale
+ [viz-svg]: https://img.shields.io/badge/Go-visualizaton-blue.svg
+ [viz-url]: https://mango-dune-07a8b7110.1.azurestaticapps.net/?repo=ProductBuildersHQ%2Fscale
+ [loc-svg]: https://tokei.rs/b1/github/ProductBuildersHQ/scale
+ [repo-url]: https://github.com/ProductBuildersHQ/scale
+ [license-svg]: https://img.shields.io/badge/license-MIT-blue.svg
+ [license-url]: https://github.com/ProductBuildersHQ/scale/blob/main/LICENSE
+
 SCALE is a machine-readable framework for telling the **platform story**: how engineering best practices are **S**tandardized, **C**onsumed, **A**utomated, **L**everaged, and made **E**ffective across an organization.
 
 SCALE is an aggregation and narrative layer over detailed maturity metrics (such as those assessed by [PRISM](https://github.com/grokify/prism-maturity)) — not another metrics catalog. Maturity frameworks make it cheap to generate hundreds of metrics, and cheap metrics destroy the story. SCALE's purpose is to make hundreds of metrics readable as five aspect-level storylines, each backed by drill-down evidence.
