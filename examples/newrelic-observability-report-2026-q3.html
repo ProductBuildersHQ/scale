@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>New Relic Observability Maturity — 2026-Q3</title>
+<style>
+:root {
+  color-scheme: light;
+  --page:      #f9f9f7;
+  --surface:   #fcfcfb;
+  --ink-1:     #0b0b0b;
+  --ink-2:     #52514e;
+  --muted:     #898781;
+  --grid:      #e1e0d9;
+  --baseline:  #c3c2b7;
+  --series:    #2a78d6;
+  --good:      #006300;
+  --bad:       #d03b3b;
+  --border:    rgba(11,11,11,0.10);
+}
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme="light"])) {
+    color-scheme: dark;
+    --page:      #0d0d0d;
+    --surface:   #1a1a19;
+    --ink-1:     #ffffff;
+    --ink-2:     #c3c2b7;
+    --muted:     #898781;
+    --grid:      #2c2c2a;
+    --baseline:  #383835;
+    --series:    #3987e5;
+    --good:      #0ca30c;
+    --bad:       #d03b3b;
+    --border:    rgba(255,255,255,0.10);
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --page:      #0d0d0d;
+  --surface:   #1a1a19;
+  --ink-1:     #ffffff;
+  --ink-2:     #c3c2b7;
+  --muted:     #898781;
+  --grid:      #2c2c2a;
+  --baseline:  #383835;
+  --series:    #3987e5;
+  --good:      #0ca30c;
+  --bad:       #d03b3b;
+  --border:    rgba(255,255,255,0.10);
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--page);
+  color: var(--ink-1);
+  font: 15px/1.55 system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+main { max-width: 920px; margin: 0 auto; padding: 32px 20px 64px; }
+h1 { font-size: 26px; margin: 0 0 2px; }
+h2 { font-size: 19px; margin: 40px 0 12px; }
+h3 { font-size: 16px; margin: 24px 0 8px; }
+.sub { color: var(--ink-2); margin: 0 0 4px; }
+.meta { color: var(--muted); font-size: 13px; }
+section.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px 22px;
+  margin-top: 16px;
+}
+section.card h3 { margin: 0 0 6px; }
+section.card.current { border-left: 3px solid var(--series); }
+.narrative { border-left: 3px solid var(--grid); padding: 2px 0 2px 14px; margin: 12px 0; }
+.narrative h4 { margin: 0 0 4px; font-size: 14px; }
+.narrative p { margin: 0; color: var(--ink-2); }
+.narrative .meta { margin-top: 6px; }
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-top: 16px; }
+.tile {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px;
+}
+.tile .label { font-size: 13px; color: var(--ink-2); }
+.tile .label b { color: var(--ink-1); }
+.tile .value { font-size: 30px; font-weight: 650; margin-top: 2px; }
+.tile .value small { font-size: 15px; font-weight: 400; color: var(--muted); }
+.delta { font-size: 13px; font-weight: 600; }
+.delta.up   { color: var(--good); }
+.delta.down { color: var(--bad); }
+.delta.flat { color: var(--muted); font-weight: 400; }
+.none { color: var(--muted); }
+.barrow { display: grid; grid-template-columns: 130px 1fr 90px; align-items: center; gap: 10px; margin: 7px 0; }
+.barrow .name { font-size: 13px; color: var(--ink-2); }
+.track { background: var(--grid); border-radius: 4px; height: 10px; position: relative; }
+.fill  { background: var(--series); border-radius: 0 4px 4px 0; height: 10px; min-width: 2px; }
+.barval { font-size: 13px; font-variant-numeric: tabular-nums; }
+.stages { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 10px 0 4px; }
+.stage {
+  border: 1px solid var(--baseline);
+  border-radius: 999px;
+  padding: 3px 12px;
+  font-size: 13px;
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+.stage b { color: var(--ink-1); font-weight: 600; }
+.arrow { color: var(--muted); }
+table { border-collapse: collapse; width: 100%; margin-top: 10px; font-size: 13.5px; }
+th { text-align: left; color: var(--muted); font-weight: 500; border-bottom: 1px solid var(--baseline); padding: 6px 10px 6px 0; }
+td { border-bottom: 1px solid var(--grid); padding: 7px 10px 7px 0; vertical-align: top; }
+td.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.chip {
+  display: inline-block;
+  border: 1px solid var(--baseline);
+  border-radius: 4px;
+  padding: 0 6px;
+  font-size: 12px;
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+.minitrack { background: var(--grid); border-radius: 3px; height: 8px; width: 90px; display: inline-block; vertical-align: middle; }
+.minifill { background: var(--series); border-radius: 0 3px 3px 0; height: 8px; min-width: 2px; }
+.warn { color: var(--ink-2); }
+.warn .icon { color: var(--ink-1); }
+.current { font-weight: 650; }
+.marker { color: var(--series); font-weight: 650; }
+.level-cap { margin: 12px 0 0; }
+ul { margin: 8px 0; padding-left: 22px; }
+li { margin: 4px 0; }
+a { color: var(--series); }
+footer { margin-top: 48px; color: var(--muted); font-size: 13px; border-top: 1px solid var(--grid); padding-top: 14px; }
+</style>
+</head>
+<body>
+<main>
+<h1>New Relic Observability Maturity</h1>
+<p class="sub">New Relic&#39;s observability maturity series organizes practice by value drivers (intelligent observability as the Level 0 foundation, then business uptime, digital experience, engineering excellence), each progressing reactive → proactive → mastery. This codification normalizes that structure onto a single ladder; the source organizes by value driver, and the PRISM crosswalk is an explicit SCALE mapping, not part of the New Relic model. Note: New Relic documentation content is published under CC BY-NC-SA — this file intentionally carries only level structure and short paraphrases with attribution.</p>
+<p class="meta">Publisher New Relic · period 2026-Q3 · compared with 2026-Q2 · generated 2026-07-22 · <a href="https://docs.newrelic.com/docs/new-relic-solutions/observability-maturity/introduction/">source</a> · <span class="chip">normalized</span> · retrieved 2026-07-21</p>
+
+<section class="card">
+  <p><b>Current practice spans Reactive to Proactive.</b></p>
+  <p class="sub">Next: <b>Mastery</b> — Mature, continuously improving practice tied to measurable business value.</p>
+</section>
+
+<h2>The ladder</h2>
+
+<section class="card">
+  <h3>0. Level 0 — Intelligent observability foundation <span class="chip" title="Explicit SCALE crosswalk to PRISM maturity">PRISM M2</span></h3>
+  <p class="sub">The essential foundation (instrumentation and platform capability) that enables all other observability value drivers.</p>
+  
+</section>
+
+<section class="card current">
+  <h3>1. Reactive <span class="chip" title="Explicit SCALE crosswalk to PRISM maturity">PRISM M3</span> <span class="marker">► current practice</span></h3>
+  <p class="sub">Value-driver practices applied reactively — responding to problems after they surface.</p>
+  
+  <div class="level-cap">
+    <b>OpenTelemetry Instrumentation</b> — <span class="meta">Foundation in place; value-driver practices are still largely reactive.</span>
+    
+    <table>
+      <tr><th>Metric</th><th>Aspect</th><th>Value</th><th>Target</th><th>Attainment</th></tr>
+      
+      <tr>
+        <td>Telemetry profile coverage</td>
+        <td><span class="chip" title="Standards">S</span></td>
+        <td class="num">80%</td>
+        <td class="num">90%</td>
+        <td><span class="minitrack"><span class="minifill" style="width: 89%"></span></span> <span class="barval">89%</span></td>
+      </tr>
+      
+      <tr>
+        <td>Services with OTel SDK</td>
+        <td><span class="chip" title="Consumption (adoption)">C · adoption</span></td>
+        <td class="num">107/130 (82%)</td>
+        <td class="num">95%</td>
+        <td><span class="minitrack"><span class="minifill" style="width: 86%"></span></span> <span class="barval">86%</span></td>
+      </tr>
+      
+      <tr>
+        <td>Services emitting Golden Signals</td>
+        <td><span class="chip" title="Consumption (conformance)">C · conformance</span></td>
+        <td class="num">65/107 (61%)</td>
+        <td class="num">90%</td>
+        <td><span class="minitrack"><span class="minifill" style="width: 68%"></span></span> <span class="barval">68%</span></td>
+      </tr>
+      
+      <tr>
+        <td>Services using auto-instrumentation</td>
+        <td><span class="chip" title="Automation">A</span></td>
+        <td class="num">47%</td>
+        <td class="num">70%</td>
+        <td><span class="minitrack"><span class="minifill" style="width: 67%"></span></span> <span class="barval">67%</span></td>
+      </tr>
+      
+      <tr>
+        <td>Dashboards from shared templates</td>
+        <td><span class="chip" title="Leverage">L</span></td>
+        <td class="num">55%</td>
+        <td class="num">80%</td>
+        <td><span class="minitrack"><span class="minifill" style="width: 69%"></span></span> <span class="barval">69%</span></td>
+      </tr>
+      
+      <tr>
+        <td>Mean time to restore</td>
+        <td><span class="chip" title="Effectiveness">E</span></td>
+        <td class="num">98 minutes</td>
+        <td class="num">60 minutes</td>
+        <td><span class="minitrack"><span class="minifill" style="width: 61%"></span></span> <span class="barval">61%</span></td>
+      </tr>
+      
+    </table>
+    
+  </div>
+  
+</section>
+
+<section class="card current">
+  <h3>2. Proactive <span class="chip" title="Explicit SCALE crosswalk to PRISM maturity">PRISM M4</span> <span class="marker">► current practice</span></h3>
+  <p class="sub">Practices applied proactively — anticipating and preventing problems.</p>
+  
+  <div class="level-cap">
+    <b>RED/USE Methodology</b> — <span class="meta">Alert-first incident detection is proactive-level practice for the uptime value driver.</span>
+    
+    <table>
+      <tr><th>Metric</th><th>Aspect</th><th>Value</th><th>Target</th><th>Attainment</th></tr>
+      
+      <tr>
+        <td>Request-serving services with RED metrics</td>
+        <td><span class="chip" title="Consumption (conformance)">C · conformance</span></td>
+        <td class="num">66%</td>
+        <td class="num">90%</td>
+        <td><span class="minitrack"><span class="minifill" style="width: 73%"></span></span> <span class="barval">73%</span></td>
+      </tr>
+      
+      <tr>
+        <td>Incidents detected by alerts</td>
+        <td><span class="chip" title="Effectiveness">E</span></td>
+        <td class="num">67%</td>
+        <td class="num">85%</td>
+        <td><span class="minitrack"><span class="minifill" style="width: 79%"></span></span> <span class="barval">79%</span></td>
+      </tr>
+      
+    </table>
+    
+  </div>
+  
+</section>
+
+<section class="card">
+  <h3>3. Mastery <span class="chip" title="Explicit SCALE crosswalk to PRISM maturity">PRISM M5</span> <span class="chip">next up</span></h3>
+  <p class="sub">Mature, continuously improving practice tied to measurable business value.</p>
+  
+</section>
+
+
+
+<h2>SCALE evidence — Observability Best Practices</h2>
+<section class="card">
+  
+  <div class="barrow" title="Standards: 89/100">
+    <span class="name"><b>S</b> Standards</span>
+    <span class="track"><span class="fill" style="width: 89%"></span></span>
+    <span class="barval">89 <span class="delta up">▲&#43;11</span></span>
+  </div>
+  
+  <div class="barrow" title="Consumption: 76/100">
+    <span class="name"><b>C</b> Consumption</span>
+    <span class="track"><span class="fill" style="width: 76%"></span></span>
+    <span class="barval">76 <span class="delta up">▲&#43;11</span></span>
+  </div>
+  
+  <div class="barrow" title="Automation: 67/100">
+    <span class="name"><b>A</b> Automation</span>
+    <span class="track"><span class="fill" style="width: 67%"></span></span>
+    <span class="barval">67 <span class="delta up">▲&#43;13</span></span>
+  </div>
+  
+  <div class="barrow" title="Leverage: 69/100">
+    <span class="name"><b>L</b> Leverage</span>
+    <span class="track"><span class="fill" style="width: 69%"></span></span>
+    <span class="barval">69 <span class="delta up">▲&#43;16</span></span>
+  </div>
+  
+  <div class="barrow" title="Effectiveness: 70/100">
+    <span class="name"><b>E</b> Effectiveness</span>
+    <span class="track"><span class="fill" style="width: 70%"></span></span>
+    <span class="barval">70 <span class="delta up">▲&#43;13</span></span>
+  </div>
+  
+</section>
+
+
+
+<section class="card narrative">
+  <h4>Q3: adoption is no longer the bottleneck — conformance is</h4>
+  <p>OTel adoption reached 82%, but only 61% of instrumented services emit all four Golden Signals. The gap is concentrated in older Java services instrumented before the telemetry profile existed. MTTR improved from 132 to 98 minutes; alert-based detection rose to 67%, which we attribute to the RED dashboard rollout on the payment path.</p>
+  
+</section>
+
+<section class="card narrative">
+  <h4>Q4: auto-instrumentation closes the conformance gap (outlook)</h4>
+  <p>Rolling auto-instrumentation to the legacy Java fleet should lift Golden Signals conformance past 80% without team-by-team migration work — the same enforcement-beats-enablement lesson the API domain learned this quarter. That is also the move that takes us from AWS Stage 2 toward Stage 3 practice.</p>
+  <div class="meta">initiatives: otel-auto-instrumentation-java</div>
+</section>
+
+
+
+
+<footer>
+Levels belong to New Relic; the PRISM crosswalk and the current-practice placement are SCALE mappings authored in the catalog, not a vendor assessment. Evidence boundary: this report shows conformance of catalogued capabilities and metrics, not a complete organizational maturity assessment. Attainment is value vs. target, clamped to 0–1, per the SCALE specification.
+</footer>
+</main>
+</body>
+</html>

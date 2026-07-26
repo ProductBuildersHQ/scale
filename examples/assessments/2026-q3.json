@@ -1,0 +1,64 @@
+{
+  "$schema": "https://productbuildershq.com/schema/scale/v0/scale-assessment.schema.json",
+  "frameworkId": "scale",
+  "period": "2026-Q3",
+  "asOf": "2026-09-30",
+  "observations": [
+    { "metricId": "api.standards.rule-coverage", "value": 84 },
+    { "metricId": "api.consumption.services-enrolled", "value": 88, "numerator": 114, "denominator": 130 },
+    { "metricId": "api.consumption.silver-pass-rate", "value": 71, "numerator": 81, "denominator": 114 },
+    { "metricId": "api.automation.ci-blocking", "value": 62, "numerator": 81, "denominator": 130 },
+    { "metricId": "api.leverage.generated-sdks", "value": 51 },
+    { "metricId": "api.effectiveness.breaking-changes", "value": 4 },
+    { "metricId": "api.consumption.openapi-completeness", "value": 69 },
+    { "metricId": "obs.standards.profile-coverage", "value": 80 },
+    { "metricId": "obs.consumption.otel-adoption", "value": 82, "numerator": 107, "denominator": 130 },
+    { "metricId": "obs.consumption.golden-signals", "value": 61, "numerator": 65, "denominator": 107 },
+    { "metricId": "obs.automation.auto-instrumentation", "value": 47 },
+    { "metricId": "obs.leverage.template-dashboards", "value": 55 },
+    { "metricId": "obs.effectiveness.mttr", "value": 98 },
+    { "metricId": "obs.consumption.red-coverage", "value": 66 },
+    { "metricId": "obs.effectiveness.alert-detection", "value": 67 },
+    { "metricId": "sec.consumption.threat-model-coverage", "value": 34, "numerator": 44, "denominator": 130 }
+  ],
+  "narratives": [
+    {
+      "id": "q3-api-journey",
+      "kind": "journey",
+      "scope": { "type": "domain", "ref": "api" },
+      "title": "Q3: CI enforcement changed the conformance curve",
+      "body": "Making style validation a blocking merge check (31% → 62% of repos) is what moved conformance, not enrollment: silver pass rate rose from 52% to 71% while enrollment grew more modestly. Teams fix what blocks their merge. Unplanned breaking changes fell from 7 to 4 — the first quarter the trend has pointed the right way.",
+      "owner": "api-platform",
+      "asOf": "2026-Q3"
+    },
+    {
+      "id": "q3-api-outlook",
+      "kind": "outlook",
+      "scope": { "type": "domain", "ref": "api" },
+      "title": "Q4: close the enforcement gap, then SDK leverage",
+      "body": "Target is blocking validation at 80% of repos and silver pass rate at 85%. Once conformance is stable, the leverage story starts: generated SDKs from conformant OpenAPI should pass 60%.",
+      "initiatives": ["api-ci-enforcement-rollout", "sdk-generation-wave-2"],
+      "owner": "api-platform",
+      "asOf": "2026-Q3"
+    },
+    {
+      "id": "q3-obs-journey",
+      "kind": "journey",
+      "scope": { "type": "domain", "ref": "observability" },
+      "title": "Q3: adoption is no longer the bottleneck — conformance is",
+      "body": "OTel adoption reached 82%, but only 61% of instrumented services emit all four Golden Signals. The gap is concentrated in older Java services instrumented before the telemetry profile existed. MTTR improved from 132 to 98 minutes; alert-based detection rose to 67%, which we attribute to the RED dashboard rollout on the payment path.",
+      "owner": "observability-platform",
+      "asOf": "2026-Q3"
+    },
+    {
+      "id": "q3-obs-outlook",
+      "kind": "outlook",
+      "scope": { "type": "domain", "ref": "observability" },
+      "title": "Q4: auto-instrumentation closes the conformance gap",
+      "body": "Rolling auto-instrumentation to the legacy Java fleet should lift Golden Signals conformance past 80% without team-by-team migration work — the same enforcement-beats-enablement lesson the API domain learned this quarter. That is also the move that takes us from AWS Stage 2 toward Stage 3 practice.",
+      "initiatives": ["otel-auto-instrumentation-java"],
+      "owner": "observability-platform",
+      "asOf": "2026-Q3"
+    }
+  ]
+}

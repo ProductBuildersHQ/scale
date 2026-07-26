@@ -1,0 +1,743 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SCALE — 2026-Q3</title>
+<style>
+:root {
+  color-scheme: light;
+  --page:      #f9f9f7;
+  --surface:   #fcfcfb;
+  --ink-1:     #0b0b0b;
+  --ink-2:     #52514e;
+  --muted:     #898781;
+  --grid:      #e1e0d9;
+  --baseline:  #c3c2b7;
+  --series:    #2a78d6;
+  --good:      #006300;
+  --bad:       #d03b3b;
+  --border:    rgba(11,11,11,0.10);
+}
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme="light"])) {
+    color-scheme: dark;
+    --page:      #0d0d0d;
+    --surface:   #1a1a19;
+    --ink-1:     #ffffff;
+    --ink-2:     #c3c2b7;
+    --muted:     #898781;
+    --grid:      #2c2c2a;
+    --baseline:  #383835;
+    --series:    #3987e5;
+    --good:      #0ca30c;
+    --bad:       #d03b3b;
+    --border:    rgba(255,255,255,0.10);
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --page:      #0d0d0d;
+  --surface:   #1a1a19;
+  --ink-1:     #ffffff;
+  --ink-2:     #c3c2b7;
+  --muted:     #898781;
+  --grid:      #2c2c2a;
+  --baseline:  #383835;
+  --series:    #3987e5;
+  --good:      #0ca30c;
+  --bad:       #d03b3b;
+  --border:    rgba(255,255,255,0.10);
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--page);
+  color: var(--ink-1);
+  font: 15px/1.55 system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+main { max-width: 920px; margin: 0 auto; padding: 32px 20px 64px; }
+h1 { font-size: 26px; margin: 0 0 2px; }
+h2 { font-size: 19px; margin: 40px 0 12px; }
+h3 { font-size: 16px; margin: 24px 0 8px; }
+.sub { color: var(--ink-2); margin: 0 0 4px; }
+.meta { color: var(--muted); font-size: 13px; }
+section.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px 22px;
+  margin-top: 16px;
+}
+section.card h3 { margin: 0 0 6px; }
+section.card.current { border-left: 3px solid var(--series); }
+.narrative { border-left: 3px solid var(--grid); padding: 2px 0 2px 14px; margin: 12px 0; }
+.narrative h4 { margin: 0 0 4px; font-size: 14px; }
+.narrative p { margin: 0; color: var(--ink-2); }
+.narrative .meta { margin-top: 6px; }
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-top: 16px; }
+.tile {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px;
+}
+.tile .label { font-size: 13px; color: var(--ink-2); }
+.tile .label b { color: var(--ink-1); }
+.tile .value { font-size: 30px; font-weight: 650; margin-top: 2px; }
+.tile .value small { font-size: 15px; font-weight: 400; color: var(--muted); }
+.delta { font-size: 13px; font-weight: 600; }
+.delta.up   { color: var(--good); }
+.delta.down { color: var(--bad); }
+.delta.flat { color: var(--muted); font-weight: 400; }
+.none { color: var(--muted); }
+.barrow { display: grid; grid-template-columns: 130px 1fr 90px; align-items: center; gap: 10px; margin: 7px 0; }
+.barrow .name { font-size: 13px; color: var(--ink-2); }
+.track { background: var(--grid); border-radius: 4px; height: 10px; position: relative; }
+.fill  { background: var(--series); border-radius: 0 4px 4px 0; height: 10px; min-width: 2px; }
+.barval { font-size: 13px; font-variant-numeric: tabular-nums; }
+.stages { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 10px 0 4px; }
+.stage {
+  border: 1px solid var(--baseline);
+  border-radius: 999px;
+  padding: 3px 12px;
+  font-size: 13px;
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+.stage b { color: var(--ink-1); font-weight: 600; }
+.arrow { color: var(--muted); }
+table { border-collapse: collapse; width: 100%; margin-top: 10px; font-size: 13.5px; }
+th { text-align: left; color: var(--muted); font-weight: 500; border-bottom: 1px solid var(--baseline); padding: 6px 10px 6px 0; }
+td { border-bottom: 1px solid var(--grid); padding: 7px 10px 7px 0; vertical-align: top; }
+td.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.chip {
+  display: inline-block;
+  border: 1px solid var(--baseline);
+  border-radius: 4px;
+  padding: 0 6px;
+  font-size: 12px;
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+.minitrack { background: var(--grid); border-radius: 3px; height: 8px; width: 90px; display: inline-block; vertical-align: middle; }
+.minifill { background: var(--series); border-radius: 0 3px 3px 0; height: 8px; min-width: 2px; }
+.warn { color: var(--ink-2); }
+.warn .icon { color: var(--ink-1); }
+.current { font-weight: 650; }
+.marker { color: var(--series); font-weight: 650; }
+.level-cap { margin: 12px 0 0; }
+ul { margin: 8px 0; padding-left: 22px; }
+li { margin: 4px 0; }
+a { color: var(--series); }
+footer { margin-top: 48px; color: var(--muted); font-size: 13px; border-top: 1px solid var(--grid); padding-top: 14px; }
+</style>
+</head>
+<body>
+<main>
+<h1>SCALE — Platformization Report</h1>
+<p class="sub">SCALE measures how engineering best practices are Standardized, Consumed, Automated, Leveraged, and made Effective across an organization. It is the narrative layer over detailed maturity metrics: its purpose is to make hundreds of metrics readable as a small number of aspect-level storylines.</p>
+<p class="meta">Period 2026-Q3 · compared with 2026-Q2 · generated 2026-07-22</p>
+
+<div class="tiles">
+
+  <div class="tile" title="Standards aspect score: mean attainment of targeted, owned metrics">
+    <div class="label"><b>S</b> · Standards</div>
+    
+      <div class="value">91<small>/100</small></div>
+      
+        <div class="delta up">▲ &#43;9 pts</div>
+        
+      
+    
+  </div>
+
+  <div class="tile" title="Consumption aspect score: mean attainment of targeted, owned metrics">
+    <div class="label"><b>C</b> · Consumption</div>
+    
+      <div class="value">68<small>/100</small></div>
+      
+        <div class="delta up">▲ &#43;14 pts</div>
+        
+      
+    
+  </div>
+
+  <div class="tile" title="Automation aspect score: mean attainment of targeted, owned metrics">
+    <div class="label"><b>A</b> · Automation</div>
+    
+      <div class="value">72<small>/100</small></div>
+      
+        <div class="delta up">▲ &#43;25 pts</div>
+        
+      
+    
+  </div>
+
+  <div class="tile" title="Leverage aspect score: mean attainment of targeted, owned metrics">
+    <div class="label"><b>L</b> · Leverage</div>
+    
+      <div class="value">68<small>/100</small></div>
+      
+        <div class="delta up">▲ &#43;13 pts</div>
+        
+      
+    
+  </div>
+
+  <div class="tile" title="Effectiveness aspect score: mean attainment of targeted, owned metrics">
+    <div class="label"><b>E</b> · Effectiveness</div>
+    
+      <div class="value">60<small>/100</small></div>
+      
+        <div class="delta up">▲ &#43;17 pts</div>
+        
+      
+    
+  </div>
+
+</div>
+
+
+<section class="card narrative">
+  <h4>Why SCALE exists</h4>
+  <p>Maturity frameworks make it cheap to generate hundreds of metrics, and cheap metrics destroy the story. Leadership cannot act on &#34;maturity level 3 became level 4&#34; repeated three hundred times. SCALE organizes every metric under one of five aspects — Standards, Consumption, Automation, Leverage, Effectiveness — so the platformization story can be told in five sentences, each backed by drill-down evidence. Domain dimensions (ordered lifecycles) provide each discipline&#39;s own story spine, orthogonal to the horizontal aspect view.</p>
+  <div class="meta">owner: platform-engineering · review by 2027-01-01</div>
+</section>
+
+
+
+<h2>What moved</h2>
+<section class="card">
+  <ul>
+  
+    <li>
+      <b>API Best Practices</b> Automation
+      <span class="delta up">▲ 39 → 78 (&#43;39 pts)</span>
+      
+      <span class="meta"> — driven by APIs with blocking CI validation (&#43;39 pts)</span>
+    </li>
+  
+    <li>
+      <b>API Best Practices</b> Effectiveness
+      <span class="delta up">▲ 29 → 50 (&#43;21 pts)</span>
+      
+      <span class="meta"> — driven by Unplanned breaking changes per quarter (&#43;21 pts)</span>
+    </li>
+  
+    <li>
+      <b>Observability Best Practices</b> Leverage
+      <span class="delta up">▲ 52 → 69 (&#43;16 pts)</span>
+      
+      <span class="meta"> — driven by Dashboards from shared templates (&#43;16 pts)</span>
+    </li>
+  
+    <li>
+      <b>API Best Practices</b> Consumption
+      <span class="delta up">▲ 68 → 84 (&#43;16 pts)</span>
+      
+      <span class="meta"> — driven by APIs passing silver conformance (&#43;21 pts), Services enrolled in API linting (&#43;18 pts)</span>
+    </li>
+  
+    <li>
+      <b>Security Best Practices</b> Consumption
+      <span class="delta up">▲ 28 → 42 (&#43;15 pts)</span>
+      
+      <span class="meta"> — driven by Services with current threat models (&#43;15 pts)</span>
+    </li>
+  
+    <li>
+      <b>Observability Best Practices</b> Effectiveness
+      <span class="delta up">▲ 57 → 70 (&#43;13 pts)</span>
+      
+      <span class="meta"> — driven by Mean time to restore (&#43;16 pts), Incidents detected by alerts (&#43;11 pts)</span>
+    </li>
+  
+  </ul>
+</section>
+
+
+
+<h2>API Best Practices</h2>
+
+
+<div class="narrative">
+  <h4>Why API standardization matters</h4>
+  <p>Every inconsistent API is a permanent tax: longer reviews, hand-written clients, breaking changes discovered by consumers. An executable style guide (api-style-spec) turns API design from tribal review knowledge into CI-enforced conformance, and conformant OpenAPI unlocks generated SDKs — leverage that compounds with every new service.</p>
+</div>
+
+
+
+<div class="stages" title="API Lifecycle: the domain's journey, read left to right">
+  <span class="stage"><b>Design</b></span><span class="arrow">→</span><span class="stage"><b>Development</b></span><span class="arrow">→</span><span class="stage"><b>Publication</b></span><span class="arrow">→</span><span class="stage"><b>Consumption</b></span><span class="arrow">→</span><span class="stage"><b>Evolution</b></span>
+</div>
+
+
+
+<section class="card">
+  
+  <div class="barrow" title="Standards: 93/100">
+    <span class="name"><b>S</b> Standards</span>
+    <span class="track"><span class="fill" style="width: 93%"></span></span>
+    <span class="barval">93 <span class="delta up">▲&#43;7</span></span>
+  </div>
+  
+  <div class="barrow" title="Consumption: 84/100">
+    <span class="name"><b>C</b> Consumption</span>
+    <span class="track"><span class="fill" style="width: 84%"></span></span>
+    <span class="barval">84 <span class="delta up">▲&#43;16</span></span>
+  </div>
+  
+  <div class="barrow" title="Automation: 78/100">
+    <span class="name"><b>A</b> Automation</span>
+    <span class="track"><span class="fill" style="width: 78%"></span></span>
+    <span class="barval">78 <span class="delta up">▲&#43;39</span></span>
+  </div>
+  
+  <div class="barrow" title="Leverage: 68/100">
+    <span class="name"><b>L</b> Leverage</span>
+    <span class="track"><span class="fill" style="width: 68%"></span></span>
+    <span class="barval">68 <span class="delta up">▲&#43;9</span></span>
+  </div>
+  
+  <div class="barrow" title="Effectiveness: 50/100">
+    <span class="name"><b>E</b> Effectiveness</span>
+    <span class="track"><span class="fill" style="width: 50%"></span></span>
+    <span class="barval">50 <span class="delta up">▲&#43;21</span></span>
+  </div>
+  
+</section>
+
+
+
+<section class="card narrative">
+  <h4>Q3: CI enforcement changed the conformance curve</h4>
+  <p>Making style validation a blocking merge check (31% → 62% of repos) is what moved conformance, not enrollment: silver pass rate rose from 52% to 71% while enrollment grew more modestly. Teams fix what blocks their merge. Unplanned breaking changes fell from 7 to 4 — the first quarter the trend has pointed the right way.</p>
+  
+</section>
+
+<section class="card narrative">
+  <h4>Q4: close the enforcement gap, then SDK leverage (outlook)</h4>
+  <p>Target is blocking validation at 80% of repos and silver pass rate at 85%. Once conformance is stable, the leverage story starts: generated SDKs from conformant OpenAPI should pass 60%.</p>
+  <div class="meta">initiatives: api-ci-enforcement-rollout, sdk-generation-wave-2</div>
+</section>
+
+
+
+
+
+<section class="card">
+  
+  <div class="level-cap">
+    <b>API Style Conformance</b>
+    <table>
+      <tr><th>Metric</th><th>Aspect</th><th>Value</th><th>Target</th><th>Attainment</th><th>Owner</th></tr>
+      
+      <tr>
+        <td>Style guide rule coverage</td>
+        <td><span class="chip" title="Standards">S</span></td>
+        <td class="num">84%</td>
+        <td class="num">90%</td>
+        <td><span class="minitrack"><span class="minifill" style="width: 93%"></span></span> <span class="barval">93%</span></td>
+        <td class="meta">api-platform</td>
+      </tr>
+      
+      <tr>
+        <td>Services enrolled in API linting</td>
+        <td><span class="chip" title="Consumption (adoption)">C · adoption</span></td>
+        <td class="num">114/130 (88%)</td>
+        <td class="num">95%</td>
+        <td><span class="minitrack"><span class="minifill" style="width: 93%"></span></span> <span class="barval">93%</span></td>
+        <td class="meta">api-platform</td>
+      </tr>
+      
+      <tr>
+        <td>APIs passing silver conformance</td>
+        <td><span class="chip" title="Consumption (conformance)">C · conformance</span></td>
+        <td class="num">81/114 (71%)</td>
+        <td class="num">90%</td>
+        <td><span class="minitrack"><span class="minifill" style="width: 79%"></span></span> <span class="barval">79%</span></td>
+        <td class="meta">api-platform</td>
+      </tr>
+      
+      <tr>
+        <td>APIs with blocking CI validation</td>
+        <td><span class="chip" title="Automation">A</span></td>
+        <td class="num">81/130 (62%)</td>
+        <td class="num">80%</td>
+        <td><span class="minitrack"><span class="minifill" style="width: 78%"></span></span> <span class="barval">78%</span></td>
+        <td class="meta">api-platform</td>
+      </tr>
+      
+      <tr>
+        <td>Client SDKs generated from OpenAPI</td>
+        <td><span class="chip" title="Leverage">L</span></td>
+        <td class="num">51%</td>
+        <td class="num">75%</td>
+        <td><span class="minitrack"><span class="minifill" style="width: 68%"></span></span> <span class="barval">68%</span></td>
+        <td class="meta">api-platform</td>
+      </tr>
+      
+      <tr>
+        <td>Unplanned breaking changes per quarter</td>
+        <td><span class="chip" title="Effectiveness">E</span></td>
+        <td class="num">4 count</td>
+        <td class="num">2 count</td>
+        <td><span class="minitrack"><span class="minifill" style="width: 50%"></span></span> <span class="barval">50%</span></td>
+        <td class="meta">api-platform</td>
+      </tr>
+      
+    </table>
+  </div>
+  
+  <div class="level-cap">
+    <b>OpenAPI Quality</b>
+    <table>
+      <tr><th>Metric</th><th>Aspect</th><th>Value</th><th>Target</th><th>Attainment</th><th>Owner</th></tr>
+      
+      <tr>
+        <td>OpenAPI completeness score</td>
+        <td><span class="chip" title="Consumption (conformance)">C · conformance</span></td>
+        <td class="num">69 score</td>
+        <td class="num">85 score</td>
+        <td><span class="minitrack"><span class="minifill" style="width: 81%"></span></span> <span class="barval">81%</span></td>
+        <td class="meta">api-platform</td>
+      </tr>
+      
+    </table>
+  </div>
+  
+</section>
+
+
+<h2>Observability Best Practices</h2>
+
+
+<div class="narrative">
+  <h4>Why observability standardization matters</h4>
+  <p>Installing a telemetry SDK is not observability. The journey is adoption (SDK installed), conformance (Golden Signals and RED/USE actually emitted with correct semantic conventions), and effectiveness (the signals are good enough that incidents are detected by alerts, not by customers). Standardized telemetry also creates leverage: shared dashboards and alert templates that every service inherits instead of rebuilding.</p>
+</div>
+
+
+
+<div class="stages" title="Telemetry Lifecycle: the domain's journey, read left to right">
+  <span class="stage"><b>Instrumentation</b></span><span class="arrow">→</span><span class="stage"><b>Collection</b></span><span class="arrow">→</span><span class="stage"><b>Analysis</b></span><span class="arrow">→</span><span class="stage"><b>Alerting</b></span><span class="arrow">→</span><span class="stage"><b>Optimization</b></span>
+</div>
+
+
+
+<section class="card">
+  
+  <div class="barrow" title="Standards: 89/100">
+    <span class="name"><b>S</b> Standards</span>
+    <span class="track"><span class="fill" style="width: 89%"></span></span>
+    <span class="barval">89 <span class="delta up">▲&#43;11</span></span>
+  </div>
+  
+  <div class="barrow" title="Consumption: 76/100">
+    <span class="name"><b>C</b> Consumption</span>
+    <span class="track"><span class="fill" style="width: 76%"></span></span>
+    <span class="barval">76 <span class="delta up">▲&#43;11</span></span>
+  </div>
+  
+  <div class="barrow" title="Automation: 67/100">
+    <span class="name"><b>A</b> Automation</span>
+    <span class="track"><span class="fill" style="width: 67%"></span></span>
+    <span class="barval">67 <span class="delta up">▲&#43;13</span></span>
+  </div>
+  
+  <div class="barrow" title="Leverage: 69/100">
+    <span class="name"><b>L</b> Leverage</span>
+    <span class="track"><span class="fill" style="width: 69%"></span></span>
+    <span class="barval">69 <span class="delta up">▲&#43;16</span></span>
+  </div>
+  
+  <div class="barrow" title="Effectiveness: 70/100">
+    <span class="name"><b>E</b> Effectiveness</span>
+    <span class="track"><span class="fill" style="width: 70%"></span></span>
+    <span class="barval">70 <span class="delta up">▲&#43;13</span></span>
+  </div>
+  
+</section>
+
+
+
+<section class="card narrative">
+  <h4>Q3: adoption is no longer the bottleneck — conformance is</h4>
+  <p>OTel adoption reached 82%, but only 61% of instrumented services emit all four Golden Signals. The gap is concentrated in older Java services instrumented before the telemetry profile existed. MTTR improved from 132 to 98 minutes; alert-based detection rose to 67%, which we attribute to the RED dashboard rollout on the payment path.</p>
+  
+</section>
+
+<section class="card narrative">
+  <h4>Q4: auto-instrumentation closes the conformance gap (outlook)</h4>
+  <p>Rolling auto-instrumentation to the legacy Java fleet should lift Golden Signals conformance past 80% without team-by-team migration work — the same enforcement-beats-enablement lesson the API domain learned this quarter. That is also the move that takes us from AWS Stage 2 toward Stage 3 practice.</p>
+  <div class="meta">initiatives: otel-auto-instrumentation-java</div>
+</section>
+
+
+
+<h3>External framework lens</h3>
+
+<section class="card">
+  <p class="sub"><b>AWS Observability Maturity Model</b> (AWS) · <a href="https://aws-observability.github.io/observability-best-practices/guides/observability-maturity-model/">source</a> · <span class="chip">normalized</span></p>
+  <table>
+    <tr><th>Level</th><th>PRISM</th><th>Where we are</th></tr>
+    
+    <tr>
+      <td>1. Foundational monitoring<div class="meta">Basic monitoring exists in inconsistent forms across teams; no defined strategy for a complete view of applications across the organization.</div></td>
+      <td class="num">M2</td>
+      <td></td>
+    </tr>
+    
+    <tr class="current">
+      <td>2. Intermediate monitoring<div class="meta">More sophisticated practices adopted: proactive alerting and distributed tracing provide insight into interactions between systems.</div></td>
+      <td class="num">M3</td>
+      <td><span class="marker">◄ current practice</span> — OpenTelemetry Instrumentation, RED/USE Methodology</td>
+    </tr>
+    
+    <tr>
+      <td>3. Advanced observability<div class="meta">Automated remediation plus AI/ML-driven anomaly detection and root-cause analysis enable corrective action before end-user impact.</div></td>
+      <td class="num">M4</td>
+      <td></td>
+    </tr>
+    
+    <tr>
+      <td>4. Proactive observability<div class="meta">Proactive and predictive observability practices with advanced automation.</div></td>
+      <td class="num">M5</td>
+      <td></td>
+    </tr>
+    
+  </table>
+</section>
+
+<section class="card">
+  <p class="sub"><b>New Relic Observability Maturity</b> (New Relic) · <a href="https://docs.newrelic.com/docs/new-relic-solutions/observability-maturity/introduction/">source</a> · <span class="chip">normalized</span></p>
+  <table>
+    <tr><th>Level</th><th>PRISM</th><th>Where we are</th></tr>
+    
+    <tr>
+      <td>0. Level 0 — Intelligent observability foundation<div class="meta">The essential foundation (instrumentation and platform capability) that enables all other observability value drivers.</div></td>
+      <td class="num">M2</td>
+      <td></td>
+    </tr>
+    
+    <tr class="current">
+      <td>1. Reactive<div class="meta">Value-driver practices applied reactively — responding to problems after they surface.</div></td>
+      <td class="num">M3</td>
+      <td><span class="marker">◄ current practice</span> — OpenTelemetry Instrumentation</td>
+    </tr>
+    
+    <tr class="current">
+      <td>2. Proactive<div class="meta">Practices applied proactively — anticipating and preventing problems.</div></td>
+      <td class="num">M4</td>
+      <td><span class="marker">◄ current practice</span> — RED/USE Methodology</td>
+    </tr>
+    
+    <tr>
+      <td>3. Mastery<div class="meta">Mature, continuously improving practice tied to measurable business value.</div></td>
+      <td class="num">M5</td>
+      <td></td>
+    </tr>
+    
+  </table>
+</section>
+
+
+
+
+<section class="card">
+  
+  <div class="level-cap">
+    <b>OpenTelemetry Instrumentation</b>
+    <table>
+      <tr><th>Metric</th><th>Aspect</th><th>Value</th><th>Target</th><th>Attainment</th><th>Owner</th></tr>
+      
+      <tr>
+        <td>Telemetry profile coverage</td>
+        <td><span class="chip" title="Standards">S</span></td>
+        <td class="num">80%</td>
+        <td class="num">90%</td>
+        <td><span class="minitrack"><span class="minifill" style="width: 89%"></span></span> <span class="barval">89%</span></td>
+        <td class="meta">observability-platform</td>
+      </tr>
+      
+      <tr>
+        <td>Services with OTel SDK</td>
+        <td><span class="chip" title="Consumption (adoption)">C · adoption</span></td>
+        <td class="num">107/130 (82%)</td>
+        <td class="num">95%</td>
+        <td><span class="minitrack"><span class="minifill" style="width: 86%"></span></span> <span class="barval">86%</span></td>
+        <td class="meta">observability-platform</td>
+      </tr>
+      
+      <tr>
+        <td>Services emitting Golden Signals</td>
+        <td><span class="chip" title="Consumption (conformance)">C · conformance</span></td>
+        <td class="num">65/107 (61%)</td>
+        <td class="num">90%</td>
+        <td><span class="minitrack"><span class="minifill" style="width: 68%"></span></span> <span class="barval">68%</span></td>
+        <td class="meta">observability-platform</td>
+      </tr>
+      
+      <tr>
+        <td>Services using auto-instrumentation</td>
+        <td><span class="chip" title="Automation">A</span></td>
+        <td class="num">47%</td>
+        <td class="num">70%</td>
+        <td><span class="minitrack"><span class="minifill" style="width: 67%"></span></span> <span class="barval">67%</span></td>
+        <td class="meta">observability-platform</td>
+      </tr>
+      
+      <tr>
+        <td>Dashboards from shared templates</td>
+        <td><span class="chip" title="Leverage">L</span></td>
+        <td class="num">55%</td>
+        <td class="num">80%</td>
+        <td><span class="minitrack"><span class="minifill" style="width: 69%"></span></span> <span class="barval">69%</span></td>
+        <td class="meta">observability-platform</td>
+      </tr>
+      
+      <tr>
+        <td>Mean time to restore</td>
+        <td><span class="chip" title="Effectiveness">E</span></td>
+        <td class="num">98 minutes</td>
+        <td class="num">60 minutes</td>
+        <td><span class="minitrack"><span class="minifill" style="width: 61%"></span></span> <span class="barval">61%</span></td>
+        <td class="meta">observability-platform</td>
+      </tr>
+      
+    </table>
+  </div>
+  
+  <div class="level-cap">
+    <b>RED/USE Methodology</b>
+    <table>
+      <tr><th>Metric</th><th>Aspect</th><th>Value</th><th>Target</th><th>Attainment</th><th>Owner</th></tr>
+      
+      <tr>
+        <td>Request-serving services with RED metrics</td>
+        <td><span class="chip" title="Consumption (conformance)">C · conformance</span></td>
+        <td class="num">66%</td>
+        <td class="num">90%</td>
+        <td><span class="minitrack"><span class="minifill" style="width: 73%"></span></span> <span class="barval">73%</span></td>
+        <td class="meta">observability-platform</td>
+      </tr>
+      
+      <tr>
+        <td>Incidents detected by alerts</td>
+        <td><span class="chip" title="Effectiveness">E</span></td>
+        <td class="num">67%</td>
+        <td class="num">85%</td>
+        <td><span class="minitrack"><span class="minifill" style="width: 79%"></span></span> <span class="barval">79%</span></td>
+        <td class="meta">observability-platform</td>
+      </tr>
+      
+    </table>
+  </div>
+  
+</section>
+
+
+<h2>Security Best Practices <span class="chip">draft</span></h2>
+
+
+<div class="narrative">
+  <h4>The AI-era security story</h4>
+  <p>Compliance frameworks like NIST CSF tell the auditor&#39;s story. This dimension tells the transformation story: security is shifting from human gatekeeping at a few chokepoints to AI-native practice at every lifecycle stage — AI threat modeling in design, defensive hygiene in development, automated posture in the pipeline, AI pentesting and red teams for offensive validation, and an AI-augmented SOC/CSIRT/PSIRT in operations. The maturity of each stage, read left to right, is the journey.</p>
+</div>
+
+
+
+<div class="stages" title="Security Lifecycle: the domain's journey, read left to right">
+  <span class="stage"><b>Design &amp; Planning</b></span><span class="arrow">→</span><span class="stage"><b>Development</b></span><span class="arrow">→</span><span class="stage"><b>CI/CD Pipeline</b></span><span class="arrow">→</span><span class="stage"><b>Offensive Validation</b></span><span class="arrow">→</span><span class="stage"><b>Operations</b></span>
+</div>
+
+
+
+<section class="card">
+  
+  <div class="barrow" title="Consumption: 42/100">
+    <span class="name"><b>C</b> Consumption</span>
+    <span class="track"><span class="fill" style="width: 42%"></span></span>
+    <span class="barval">42 <span class="delta up">▲&#43;15</span></span>
+  </div>
+  
+</section>
+
+
+
+
+
+
+
+<section class="card">
+  
+  <div class="level-cap">
+    <b>AI Threat Modeling</b>
+    <table>
+      <tr><th>Metric</th><th>Aspect</th><th>Value</th><th>Target</th><th>Attainment</th><th>Owner</th></tr>
+      
+      <tr>
+        <td>Services with current threat models</td>
+        <td><span class="chip" title="Consumption (adoption)">C · adoption</span></td>
+        <td class="num">44/130 (34%)</td>
+        <td class="num">80%</td>
+        <td><span class="minitrack"><span class="minifill" style="width: 42%"></span></span> <span class="barval">42%</span></td>
+        <td class="meta">security-engineering</td>
+      </tr>
+      
+    </table>
+  </div>
+  
+  <div class="level-cap">
+    <b>Automated Pipeline Posture</b>
+    <table>
+      <tr><th>Metric</th><th>Aspect</th><th>Value</th><th>Target</th><th>Attainment</th><th>Owner</th></tr>
+      
+      <tr>
+        <td>Pipelines with blocking security gates<div class="meta">not measured</div></td>
+        <td><span class="chip" title="Automation">A</span></td>
+        <td class="num">—</td>
+        <td class="num">90%</td>
+        <td></td>
+        <td class="meta">security-engineering</td>
+      </tr>
+      
+    </table>
+  </div>
+  
+  <div class="level-cap">
+    <b>AI Security Operations</b>
+    <table>
+      <tr><th>Metric</th><th>Aspect</th><th>Value</th><th>Target</th><th>Attainment</th><th>Owner</th></tr>
+      
+      <tr>
+        <td>Security incident mean time to restore<div class="meta">not measured</div></td>
+        <td><span class="chip" title="Effectiveness">E</span></td>
+        <td class="num">—</td>
+        <td class="num">24 hours</td>
+        <td></td>
+        <td class="meta">security-engineering</td>
+      </tr>
+      
+    </table>
+  </div>
+  
+</section>
+
+
+
+
+<h2>Coverage</h2>
+<section class="card">
+  <p class="warn"><span class="icon">⚠</span> <b>Not measured this period</b> (rollup-eligible, no observation): sec.automation.pipeline-gates, sec.effectiveness.incident-mttr</p>
+  
+</section>
+
+
+<footer>
+Aspect scores are the mean attainment (value vs. target, clamped to 0–1) of targeted, owned metrics; overall scores average domain scores so metric-heavy domains don't dominate. Rollup semantics are defined by the SCALE specification. External model levels belong to their publishers; PRISM crosswalks are explicit SCALE mappings.
+</footer>
+</main>
+</body>
+</html>

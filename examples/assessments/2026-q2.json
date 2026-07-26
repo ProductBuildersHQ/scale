@@ -1,0 +1,25 @@
+{
+  "$schema": "https://productbuildershq.com/schema/scale/v0/scale-assessment.schema.json",
+  "frameworkId": "scale",
+  "period": "2026-Q2",
+  "asOf": "2026-06-30",
+  "observations": [
+    { "metricId": "api.standards.rule-coverage", "value": 78 },
+    { "metricId": "api.consumption.services-enrolled", "value": 71, "numerator": 92, "denominator": 130 },
+    { "metricId": "api.consumption.silver-pass-rate", "value": 52, "numerator": 48, "denominator": 92 },
+    { "metricId": "api.automation.ci-blocking", "value": 31, "numerator": 40, "denominator": 130 },
+    { "metricId": "api.leverage.generated-sdks", "value": 44 },
+    { "metricId": "api.effectiveness.breaking-changes", "value": 7 },
+    { "metricId": "api.consumption.openapi-completeness", "value": 61 },
+    { "metricId": "obs.standards.profile-coverage", "value": 70 },
+    { "metricId": "obs.consumption.otel-adoption", "value": 74, "numerator": 96, "denominator": 130 },
+    { "metricId": "obs.consumption.golden-signals", "value": 49, "numerator": 47, "denominator": 96 },
+    { "metricId": "obs.automation.auto-instrumentation", "value": 38 },
+    { "metricId": "obs.leverage.template-dashboards", "value": 42 },
+    { "metricId": "obs.effectiveness.mttr", "value": 132 },
+    { "metricId": "obs.consumption.red-coverage", "value": 55 },
+    { "metricId": "obs.effectiveness.alert-detection", "value": 58 },
+    { "metricId": "sec.consumption.threat-model-coverage", "value": 22, "numerator": 29, "denominator": 130 },
+    { "metricId": "sec.automation.pipeline-gates", "value": 45 }
+  ]
+}
