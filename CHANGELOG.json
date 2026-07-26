@@ -1,0 +1,53 @@
+{
+  "irVersion": "1.0",
+  "project": "scale",
+  "repository": "https://github.com/ProductBuildersHQ/scale",
+  "versioning": "semver",
+  "commitConvention": "conventional",
+  "maintainers": ["johncwang@gmail.com"],
+  "releases": [
+    {
+      "version": "v0.1.0",
+      "date": "2026-07-25",
+      "commit": "0230eb9",
+      "highlights": [
+        { "description": "Machine-readable framework for telling the platform story: how engineering best practices are Standardized, Consumed, Automated, Leveraged, and made Effective" }
+      ],
+      "added": [
+        { "description": "Core SCALE types: Framework, Domain, Capability, Metric, Assessment, NarrativeBlock", "commit": "d32e575" },
+        { "description": "MaturityLadder mapping observed values to PRISM maturity levels (1-5) with threshold rungs, exclusive comparisons, and direction-aware logic", "commit": "d48d3dd" },
+        { "description": "Weakest-link maturity semantics: capability maturity = min(metric rungs), domain maturity = min(capability rungs)", "commit": "d48d3dd" },
+        { "description": "ComputeRollup for attainment calculation with domain aspect scores as plain means", "commit": "ab7d45f" },
+        { "description": "CompareRollups for period-over-period deltas and movers layer", "commit": "ab7d45f" },
+        { "description": "ExternalModel for codifying third-party maturity models (AWS, New Relic) as data with PRISM crosswalks", "commit": "347e1fa" },
+        { "description": "LoadFrameworkDir assembling framework.json + domains/*.json + external/*.json", "commit": "390a5b2" },
+        { "description": "Validate enforcing unique metric IDs, SCALE aspect requirements, and ladder constraints", "commit": "390a5b2" },
+        { "description": "JSON schema generation from Go types via invopop/jsonschema", "commit": "54d8ba4" },
+        { "description": "Embedded schemas: scale-framework, scale-domain, scale-assessment, scale-external-model", "commit": "54d8ba4" },
+        { "description": "Reference catalog with three domains: api, observability, security", "commit": "93a3a40" },
+        { "description": "Two external models: AWS Observability Maturity, New Relic Observability Maturity", "commit": "93a3a40" },
+        { "description": "Self-contained HTML story report with aspect tiles, movers, domain journeys, and capability maturity chips", "commit": "b355e4f" },
+        { "description": "External model lens view for rendering through vendor maturity ladders", "commit": "b355e4f" },
+        { "description": "Light/dark theme support in HTML reports with no external assets", "commit": "b355e4f" },
+        { "description": "CLI: scale validate, report, and export subcommands", "commit": "a8d8950" },
+        { "description": "<scale-report> Lit web component rendering story report client-side from JSON IR", "commit": "5f6afce" },
+        { "description": "compute.js mirroring Go rollup/maturity semantics, pinned by node tests", "commit": "5f6afce" },
+        { "description": "Themeable web component via --scale-* CSS custom properties", "commit": "5f6afce" },
+        { "description": "Example assessments (Q2/Q3) and generated reports (aspect, AWS, New Relic)", "commit": "5ef6860" }
+      ],
+      "documentation": [
+        { "description": "README documenting SCALE framework: five aspects, information model, rollup semantics, CLI usage", "commit": "4508a55" },
+        { "description": "v0.1.0 release notes in docs/releases/", "commit": "c5bbbd3" }
+      ],
+      "dependencies": [
+        { "description": "prism-core for shared types (FrameworkMapping, SLIDirection)", "commit": "ebb5d36" },
+        { "description": "invopop/jsonschema for schema generation", "commit": "ebb5d36" }
+      ],
+      "build": [
+        { "description": "GitHub Actions workflows: go-ci, go-lint, go-sast-codeql", "commit": "456ddf5" },
+        { "description": "golangci-lint configuration", "commit": "456ddf5" },
+        { "description": "MIT license", "commit": "456ddf5" }
+      ]
+    }
+  ]
+}
