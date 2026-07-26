@@ -1,0 +1,21 @@
+{
+  "name": "@productbuildershq/scale-report",
+  "version": "0.1.0",
+  "description": "Lit web component rendering the SCALE platform story report from framework/assessment JSON",
+  "type": "module",
+  "main": "src/scale-report.js",
+  "exports": {
+    ".": "./src/scale-report.js",
+    "./compute": "./src/compute.js"
+  },
+  "files": [
+    "src/"
+  ],
+  "scripts": {
+    "test": "node --test test/*.test.mjs"
+  },
+  "peerDependencies": {
+    "lit": "^3.0.0"
+  },
+  "license": "MIT"
+}
