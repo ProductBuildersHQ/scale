@@ -26,7 +26,7 @@ Authoring guides and ecosystem integration.
 | RMI-SCALE-010 | Done | Catalog authoring guide |
 | RMI-SCALE-011 | Done | Register SCALE as framework constant in prism-core |
 | RMI-SCALE-012 | Done | Add SCALE aspect types to prism-core |
-| RMI-SCALE-013 | Planned | Add `scaleAspect` field to prism-capability SLI shape |
+| RMI-SCALE-013 | Done | Add `scaleAspect` field to prism-maturity SLI type |
 | RMI-SCALE-014 | Planned | prism-maturity SCALE rollup integration |
 
 ## Phase 3: Distribution
@@ -76,4 +76,5 @@ Enterprise-scale multi-team reporting.
 
 ## Completed
 
-- v0.1.0 (2026-07-25): Phase 1 complete, Phase 2 in progress
+- v0.1.0 (2026-07-25): Phase 1 complete
+- v0.1.1 (2026-07-25): Phase 2 RMI-010 through RMI-013 complete
