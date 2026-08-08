@@ -227,7 +227,7 @@ func irToReportData(ir *ReportIR) *reportData {
 					ID:          em.ID,
 					Name:        em.Name,
 					Publisher:   em.Publisher,
-					SourceURL:         em.URL,
+					SourceURL:   em.URL,
 					Description: em.Description,
 				},
 			}
