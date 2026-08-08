@@ -1,0 +1,60 @@
+name: MkDocs
+
+# Builds the documentation site on every change and, on pushes to main,
+# publishes it to GitHub Pages.
+#
+# NOTE: The canonical docs URL (productbuildershq.com/scale) is served by the
+# ProductBuildersHQ central docs pipeline. This workflow additionally publishes
+# to the repo's GitHub Pages URL so the site is live without central infra. To
+# use it, enable Pages for this repo (Settings → Pages → Source: GitHub Actions).
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "docs/**"
+      - "mkdocs.yml"
+      - ".github/workflows/mkdocs.yaml"
+  pull_request:
+    paths:
+      - "docs/**"
+      - "mkdocs.yml"
+      - ".github/workflows/mkdocs.yaml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+      - name: Install dependencies
+        run: pip install -r docs/requirements.txt
+      - name: Build site (strict)
+        run: mkdocs build --strict
+      - name: Upload Pages artifact
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    # Publish only on pushes to main (not pull requests).
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
