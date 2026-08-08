@@ -7,6 +7,43 @@
   "maintainers": ["johncwang@gmail.com"],
   "releases": [
     {
+      "version": "v0.2.0",
+      "date": "2026-08-08",
+      "commit": "8669930",
+      "highlights": [
+        { "description": "Platform Adoption domain: a fourth reference domain measuring adoption and leverage of internal platform libraries across the organization's Go repositories via dependency analysis", "commit": "72df817" },
+        { "description": "ReportIR: a format-agnostic report intermediate representation with a JSON renderer and HTMLFromIR, so a report can be computed once and cached, served as JSON, or rendered in multiple formats", "commit": "7658694" },
+        { "description": "MkDocs documentation site published at productbuildershq.com/scale", "commit": "454db5f" }
+      ],
+      "added": [
+        { "description": "Platform Adoption domain (catalog/domains/platform.json): library existence (Standards), per-library adoption rates (Consumption/adoption), and reuse leverage (Leverage); the reference catalog now seeds four domains (api, observability, platform, security)", "commit": "72df817" },
+        { "description": "ReportIR intermediate representation with BuildIR, a JSON renderer, and HTMLFromIR, carrying all computed report data (aspects, movers, domains, capabilities, coverage) without the source Framework or Assessment", "commit": "7658694" }
+      ],
+      "documentation": [
+        { "description": "MkDocs Material documentation site: getting started, the five aspects, information model, catalog authoring, reports & web component, and the framework/assessment/CLI reference", "commit": "454db5f" },
+        { "description": "CLAUDE.md documenting type/catalog conventions and the framework.json rebuild step", "commit": "7e71eda" },
+        { "description": "2026-Q3 platform assessment example", "commit": "e0c3631" },
+        { "description": "v0.2.0 release notes and README updates (four domains, ReportIR renderers, documentation link)", "commit": "8669930" },
+        { "description": "Catalog authoring guide and roadmap", "commit": "636c3e8" },
+        { "description": "Roadmap updated for completed PRISM integration", "commit": "f0eeb9d" },
+        { "description": "CHANGELOG.json and generated CHANGELOG.md", "commit": "855c404" }
+      ],
+      "build": [
+        { "description": "Committed assembled framework.json export bundle at the repo root (deterministic scale export output) so the full framework is browsable on GitHub", "commit": "d674b9a" }
+      ],
+      "infrastructure": [
+        { "description": "GitHub Actions workflow building the docs (mkdocs build --strict) on docs changes and publishing to GitHub Pages on main", "commit": "cabeac6" }
+      ],
+      "dependencies": [
+        { "description": "Bump github.com/grokify/prism-core from 0.3.0 to 0.4.0", "commit": "192ce5f" },
+        { "description": "Bump github.com/buger/jsonparser from 1.2.0 to 1.6.1", "commit": "276dcbb" }
+      ],
+      "internal": [
+        { "description": "Fix gofmt alignment in report irToReportData", "commit": "8e5627d" },
+        { "description": "Ignore mkdocs site/ build output", "commit": "9335a8b" }
+      ]
+    },
+    {
       "version": "v0.1.0",
       "date": "2026-07-25",
       "commit": "0230eb9",
