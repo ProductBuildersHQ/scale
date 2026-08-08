@@ -44,6 +44,28 @@ The export is deterministic — regenerating with an unchanged catalog produces 
 byte-identical file. Do not hand-edit root `framework.json`; edit the catalog
 sources and re-export.
 
+## Documentation Site
+
+Docs are a MkDocs (Material) site under `docs/`, configured by `mkdocs.yml`.
+Content lives in `docs/{getting-started,guide,reference,specs,releases}/`; the
+existing `docs/guide/catalog-authoring.md` is the authoring how-to.
+
+```bash
+# Preview locally (http://127.0.0.1:8000)
+pip install -r docs/requirements.txt
+mkdocs serve
+
+# Build (fail on broken links / nav)
+mkdocs build --strict
+```
+
+The canonical site is served at `productbuildershq.com/scale` by the
+ProductBuildersHQ central docs pipeline (same as sibling repos: shared theme
+CSS/JS and unified navbar are pulled from `productbuildershq.com`). The in-repo
+`.github/workflows/mkdocs.yaml` additionally builds on every PR and publishes to
+GitHub Pages on pushes to `main`. Keep the nav in `mkdocs.yml` in sync when
+adding or moving pages, and run `mkdocs build --strict` before committing.
+
 ## Common Commands
 
 ```bash

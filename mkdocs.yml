@@ -1,0 +1,73 @@
+site_name: SCALE
+site_description: The narrative layer over engineering maturity metrics — Standards, Consumption, Automation, Leverage, Effectiveness
+site_url: https://productbuildershq.com/scale
+repo_url: https://github.com/ProductBuildersHQ/scale
+repo_name: ProductBuildersHQ/scale
+
+theme:
+  name: material
+  custom_dir: docs/overrides
+  palette:
+    # Light mode first (ProductBuildersHQ default)
+    - scheme: default
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.highlight
+    - content.code.copy
+
+# ProductBuildersHQ Theme Assets (served from main site)
+extra_css:
+  - https://productbuildershq.com/css/productbuildershq-mkdocs.css
+
+extra_javascript:
+  - https://productbuildershq.com/js/site-nav.min.js
+  - https://productbuildershq.com/js/pbhq-nav.js
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - admonition
+  - pymdownx.details
+  - tables
+  - toc:
+      permalink: true
+
+nav:
+  - Home: index.md
+  - Getting Started:
+      - Installation: getting-started/installation.md
+      - Quick Start: getting-started/quickstart.md
+  - Guide:
+      - The Five Aspects: guide/aspects.md
+      - Information Model: guide/information-model.md
+      - Catalog Authoring: guide/catalog-authoring.md
+      - Reports & Web Component: guide/reports.md
+  - Reference:
+      - Framework & Domain: reference/framework.md
+      - Assessment Format: reference/assessment.md
+      - CLI: reference/cli.md
+  - Project:
+      - Roadmap: specs/ROADMAP.md
+  - Releases:
+      - v0.1.0: releases/v0.1.0.md
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/ProductBuildersHQ/scale
