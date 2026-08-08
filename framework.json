@@ -1,0 +1,1340 @@
+{
+  "$schema": "https://productbuildershq.com/schema/scale/v0/scale-framework.schema.json",
+  "id": "scale",
+  "name": "SCALE",
+  "description": "SCALE measures how engineering best practices are Standardized, Consumed, Automated, Leveraged, and made Effective across an organization. It is the narrative layer over detailed maturity metrics: its purpose is to make hundreds of metrics readable as a small number of aspect-level storylines.",
+  "version": "0.1.0",
+  "owner": "platform-engineering",
+  "updated": "2026-07-21",
+  "narratives": [
+    {
+      "id": "scale-thesis",
+      "kind": "thesis",
+      "title": "Why SCALE exists",
+      "body": "Maturity frameworks make it cheap to generate hundreds of metrics, and cheap metrics destroy the story. Leadership cannot act on \"maturity level 3 became level 4\" repeated three hundred times. SCALE organizes every metric under one of five aspects — Standards, Consumption, Automation, Leverage, Effectiveness — so the platform story can be told in five sentences, each backed by drill-down evidence. Domain dimensions (ordered lifecycles) provide each discipline's own story spine, orthogonal to the horizontal aspect view.",
+      "owner": "platform-engineering",
+      "reviewBy": "2027-01-01"
+    }
+  ],
+  "domains": [
+    {
+      "$schema": "https://productbuildershq.com/schema/scale/v0/scale-domain.schema.json",
+      "id": "api",
+      "name": "API Best Practices",
+      "description": "Consistent, machine-validated API design across all services, anchored by api-style-spec: executable style rules, conformance levels, and generated SDKs.",
+      "status": "active",
+      "owner": "api-platform",
+      "dimensions": [
+        {
+          "id": "api-lifecycle",
+          "name": "API Lifecycle",
+          "description": "The journey of an API from design through evolution.",
+          "stages": [
+            {
+              "id": "design",
+              "name": "Design",
+              "description": "API design and review against the style guide."
+            },
+            {
+              "id": "development",
+              "name": "Development",
+              "description": "Implementation with linting and OpenAPI validation."
+            },
+            {
+              "id": "publication",
+              "name": "Publication",
+              "description": "Documentation, SDK generation, and catalog listing."
+            },
+            {
+              "id": "consumption",
+              "name": "Consumption",
+              "description": "Client integration and SDK usage."
+            },
+            {
+              "id": "evolution",
+              "name": "Evolution",
+              "description": "Versioning, deprecation, and breaking-change management."
+            }
+          ]
+        }
+      ],
+      "capabilities": [
+        {
+          "id": "api-style-conformance",
+          "name": "API Style Conformance",
+          "description": "Services design and validate APIs against the organization's api-style-spec profile.",
+          "status": "active",
+          "owner": "api-platform",
+          "stages": [
+            {
+              "dimension": "api-lifecycle",
+              "stage": "design"
+            },
+            {
+              "dimension": "api-lifecycle",
+              "stage": "development"
+            }
+          ],
+          "metrics": [
+            {
+              "id": "api.standards.rule-coverage",
+              "name": "Style guide rule coverage",
+              "description": "Percentage of API design categories covered by executable rules in the organization's api-style-spec profile, per the api-coverage rubric.",
+              "aspect": "standards",
+              "unit": "percent",
+              "target": {
+                "value": 90,
+                "by": "2026-Q4"
+              },
+              "owner": "api-platform",
+              "source": {
+                "system": "api-style-spec",
+                "ref": "api-coverage.rubric.json"
+              }
+            },
+            {
+              "id": "api.consumption.services-enrolled",
+              "name": "Services enrolled in API linting",
+              "description": "Percentage of API-serving services with api-style-spec linting configured.",
+              "aspect": "consumption",
+              "consumptionKind": "adoption",
+              "unit": "percent",
+              "target": {
+                "value": 95,
+                "by": "2026-Q4"
+              },
+              "owner": "api-platform",
+              "source": {
+                "system": "api-style-spec",
+                "ref": "repo-config-inventory"
+              }
+            },
+            {
+              "id": "api.consumption.silver-pass-rate",
+              "name": "APIs passing silver conformance",
+              "description": "Percentage of linted APIs that pass the silver conformance level. Adoption says the linter is installed; this says the APIs actually conform.",
+              "aspect": "consumption",
+              "consumptionKind": "conformance",
+              "unit": "percent",
+              "target": {
+                "value": 90,
+                "by": "2027-Q2"
+              },
+              "owner": "api-platform",
+              "source": {
+                "system": "api-style-spec",
+                "ref": "lint-report.conformance_level"
+              }
+            },
+            {
+              "id": "api.automation.ci-blocking",
+              "name": "APIs with blocking CI validation",
+              "description": "Percentage of API repositories where style validation blocks merge rather than warning.",
+              "aspect": "automation",
+              "unit": "percent",
+              "target": {
+                "value": 80,
+                "by": "2027-Q2"
+              },
+              "owner": "api-platform",
+              "source": {
+                "system": "ci",
+                "ref": "pipeline-config"
+              }
+            },
+            {
+              "id": "api.leverage.generated-sdks",
+              "name": "Client SDKs generated from OpenAPI",
+              "description": "Percentage of client SDKs generated from conformant OpenAPI rather than hand-written.",
+              "aspect": "leverage",
+              "unit": "percent",
+              "target": {
+                "value": 75,
+                "by": "2027-Q2"
+              },
+              "owner": "api-platform",
+              "source": {
+                "system": "api-style-spec",
+                "ref": "sdk-generation"
+              }
+            },
+            {
+              "id": "api.effectiveness.breaking-changes",
+              "name": "Unplanned breaking changes per quarter",
+              "description": "Count of consumer-reported breaking API changes that were not part of a planned deprecation.",
+              "aspect": "effectiveness",
+              "unit": "count",
+              "direction": "lower_is_better",
+              "target": {
+                "value": 2,
+                "by": "2027-Q2"
+              },
+              "owner": "api-platform",
+              "source": {
+                "system": "incident-tracker",
+                "ref": "label:api-breaking-change"
+              }
+            }
+          ],
+          "prism": {
+            "maturityDomain": "quality",
+            "levelCriteria": {
+              "M1": "Style guide documented; manual reviews only.",
+              "M2": "OpenAPI required; api-style-spec linting available.",
+              "M3": "CI validation standard across teams; conformance levels tracked.",
+              "M4": "Blocking CI enforcement; \u003e=95% of APIs at silver conformance.",
+              "M5": "AI-assisted design review and automated remediation with measurably better outcomes."
+            }
+          }
+        },
+        {
+          "id": "openapi-quality",
+          "name": "OpenAPI Quality",
+          "description": "OpenAPI documents are complete enough to drive documentation, validation, and SDK generation.",
+          "status": "active",
+          "owner": "api-platform",
+          "stages": [
+            {
+              "dimension": "api-lifecycle",
+              "stage": "development"
+            },
+            {
+              "dimension": "api-lifecycle",
+              "stage": "publication"
+            }
+          ],
+          "metrics": [
+            {
+              "id": "api.consumption.openapi-completeness",
+              "name": "OpenAPI completeness score",
+              "description": "Mean completeness score of OpenAPI documents (descriptions, examples, schemas) per the style-guide-quality rubric.",
+              "aspect": "consumption",
+              "consumptionKind": "conformance",
+              "unit": "score",
+              "target": {
+                "value": 85,
+                "by": "2027-Q2"
+              },
+              "owner": "api-platform",
+              "source": {
+                "system": "api-style-spec",
+                "ref": "style-guide-quality.rubric.json"
+              }
+            }
+          ]
+        }
+      ],
+      "narratives": [
+        {
+          "id": "api-thesis",
+          "kind": "thesis",
+          "title": "Why API standardization matters",
+          "body": "Every inconsistent API is a permanent tax: longer reviews, hand-written clients, breaking changes discovered by consumers. An executable style guide (api-style-spec) turns API design from tribal review knowledge into CI-enforced conformance, and conformant OpenAPI unlocks generated SDKs — leverage that compounds with every new service.",
+          "owner": "api-platform",
+          "reviewBy": "2027-01-01"
+        }
+      ]
+    },
+    {
+      "$schema": "https://productbuildershq.com/schema/scale/v0/scale-domain.schema.json",
+      "id": "observability",
+      "name": "Observability Best Practices",
+      "description": "Every service emits standardized telemetry — OpenTelemetry/Prometheus with Golden Signals and RED/USE coverage — and that telemetry is demonstrably good enough to run the business on.",
+      "status": "active",
+      "owner": "observability-platform",
+      "dimensions": [
+        {
+          "id": "telemetry-lifecycle",
+          "name": "Telemetry Lifecycle",
+          "description": "The journey of telemetry from instrumentation to optimization.",
+          "stages": [
+            {
+              "id": "instrumentation",
+              "name": "Instrumentation",
+              "description": "SDKs installed and signals emitted."
+            },
+            {
+              "id": "collection",
+              "name": "Collection",
+              "description": "Pipelines, storage, and semantic-convention conformance."
+            },
+            {
+              "id": "analysis",
+              "name": "Analysis",
+              "description": "Dashboards and service-level indicators."
+            },
+            {
+              "id": "alerting",
+              "name": "Alerting",
+              "description": "Actionable alerts tied to SLOs."
+            },
+            {
+              "id": "optimization",
+              "name": "Optimization",
+              "description": "Cost, cardinality, and signal-quality tuning."
+            }
+          ]
+        }
+      ],
+      "capabilities": [
+        {
+          "id": "otel-instrumentation",
+          "name": "OpenTelemetry Instrumentation",
+          "description": "Services are instrumented with OpenTelemetry (or Prometheus exporters) and emit the Four Golden Signals.",
+          "status": "active",
+          "owner": "observability-platform",
+          "stages": [
+            {
+              "dimension": "telemetry-lifecycle",
+              "stage": "instrumentation"
+            },
+            {
+              "dimension": "telemetry-lifecycle",
+              "stage": "collection"
+            }
+          ],
+          "metrics": [
+            {
+              "id": "obs.standards.profile-coverage",
+              "name": "Telemetry profile coverage",
+              "description": "Percentage of service archetypes with a published telemetry profile (required signals, semantic conventions).",
+              "aspect": "standards",
+              "unit": "percent",
+              "target": {
+                "value": 90,
+                "by": "2026-Q4"
+              },
+              "owner": "observability-platform",
+              "source": {
+                "system": "observability-profiles",
+                "ref": "profile-inventory"
+              }
+            },
+            {
+              "id": "obs.consumption.otel-adoption",
+              "name": "Services with OTel SDK",
+              "description": "Percentage of production services with the OpenTelemetry SDK (or Prometheus exporter) installed.",
+              "aspect": "consumption",
+              "consumptionKind": "adoption",
+              "unit": "percent",
+              "target": {
+                "value": 95,
+                "by": "2026-Q4"
+              },
+              "owner": "observability-platform",
+              "source": {
+                "system": "service-inventory",
+                "ref": "dependency-scan"
+              }
+            },
+            {
+              "id": "obs.consumption.golden-signals",
+              "name": "Services emitting Golden Signals",
+              "description": "Percentage of instrumented services actually emitting latency, traffic, errors, and saturation per the telemetry profile. Installation is adoption; emission is conformance.",
+              "aspect": "consumption",
+              "consumptionKind": "conformance",
+              "unit": "percent",
+              "target": {
+                "value": 90,
+                "by": "2027-Q2"
+              },
+              "owner": "observability-platform",
+              "source": {
+                "system": "telemetry-backend",
+                "ref": "signal-presence-check"
+              }
+            },
+            {
+              "id": "obs.automation.auto-instrumentation",
+              "name": "Services using auto-instrumentation",
+              "description": "Percentage of instrumented services using auto-instrumentation rather than hand-written spans for baseline signals.",
+              "aspect": "automation",
+              "unit": "percent",
+              "target": {
+                "value": 70,
+                "by": "2027-Q2"
+              },
+              "owner": "observability-platform",
+              "source": {
+                "system": "service-inventory",
+                "ref": "instrumentation-mode"
+              }
+            },
+            {
+              "id": "obs.leverage.template-dashboards",
+              "name": "Dashboards from shared templates",
+              "description": "Percentage of service dashboards generated from shared templates rather than built per-service.",
+              "aspect": "leverage",
+              "unit": "percent",
+              "target": {
+                "value": 80,
+                "by": "2027-Q2"
+              },
+              "owner": "observability-platform",
+              "source": {
+                "system": "dashboards",
+                "ref": "template-provenance"
+              }
+            },
+            {
+              "id": "obs.effectiveness.mttr",
+              "name": "Mean time to restore",
+              "description": "Mean time to restore service for production incidents, in minutes.",
+              "aspect": "effectiveness",
+              "unit": "minutes",
+              "direction": "lower_is_better",
+              "target": {
+                "value": 60,
+                "by": "2027-Q2"
+              },
+              "owner": "observability-platform",
+              "source": {
+                "system": "incident-tracker",
+                "ref": "mttr"
+              },
+              "frameworks": [
+                {
+                  "framework": "DORA",
+                  "reference": "time-to-restore",
+                  "description": "DORA Time to Restore Service."
+                }
+              ]
+            }
+          ],
+          "frameworks": [
+            {
+              "framework": "SRE",
+              "description": "Golden Signals per the Google SRE book."
+            },
+            {
+              "framework": "aws-observability-maturity",
+              "reference": "intermediate",
+              "description": "Current practice: distributed tracing and proactive alerting place us at Stage 2 of 4; Stage 3 requires AI/ML anomaly detection and automated remediation."
+            },
+            {
+              "framework": "newrelic-observability-maturity",
+              "reference": "reactive",
+              "description": "Foundation in place; value-driver practices are still largely reactive."
+            }
+          ],
+          "prism": {
+            "maturityDomain": "operations",
+            "levelCriteria": {
+              "M1": "Ad-hoc logging; no standard telemetry.",
+              "M2": "OTel SDK available; some services instrumented.",
+              "M3": "Telemetry profile published; majority of services emitting Golden Signals.",
+              "M4": "Conformance validated automatically; \u003e=90% services conformant.",
+              "M5": "Auto-instrumentation by default with predictive signal-quality analysis."
+            }
+          }
+        },
+        {
+          "id": "red-use-methodology",
+          "name": "RED/USE Methodology",
+          "description": "Request-serving services expose RED metrics (rate, errors, duration); infrastructure exposes USE metrics (utilization, saturation, errors).",
+          "status": "active",
+          "owner": "observability-platform",
+          "stages": [
+            {
+              "dimension": "telemetry-lifecycle",
+              "stage": "analysis"
+            },
+            {
+              "dimension": "telemetry-lifecycle",
+              "stage": "alerting"
+            }
+          ],
+          "metrics": [
+            {
+              "id": "obs.consumption.red-coverage",
+              "name": "Request-serving services with RED metrics",
+              "description": "Percentage of request-serving services exposing rate, errors, and duration metrics per the profile.",
+              "aspect": "consumption",
+              "consumptionKind": "conformance",
+              "unit": "percent",
+              "target": {
+                "value": 90,
+                "by": "2027-Q2"
+              },
+              "owner": "observability-platform",
+              "source": {
+                "system": "telemetry-backend",
+                "ref": "red-presence-check"
+              }
+            },
+            {
+              "id": "obs.effectiveness.alert-detection",
+              "name": "Incidents detected by alerts",
+              "description": "Percentage of production incidents detected by alerting before a customer or engineer report — the test of whether the telemetry is actually good.",
+              "aspect": "effectiveness",
+              "unit": "percent",
+              "target": {
+                "value": 85,
+                "by": "2027-Q2"
+              },
+              "owner": "observability-platform",
+              "source": {
+                "system": "incident-tracker",
+                "ref": "detection-source"
+              }
+            }
+          ],
+          "frameworks": [
+            {
+              "framework": "aws-observability-maturity",
+              "reference": "intermediate",
+              "description": "RED/USE dashboards and alerting correspond to Stage 2 practice."
+            },
+            {
+              "framework": "newrelic-observability-maturity",
+              "reference": "proactive",
+              "description": "Alert-first incident detection is proactive-level practice for the uptime value driver."
+            }
+          ]
+        }
+      ],
+      "narratives": [
+        {
+          "id": "observability-thesis",
+          "kind": "thesis",
+          "title": "Why observability standardization matters",
+          "body": "Installing a telemetry SDK is not observability. The journey is adoption (SDK installed), conformance (Golden Signals and RED/USE actually emitted with correct semantic conventions), and effectiveness (the signals are good enough that incidents are detected by alerts, not by customers). Standardized telemetry also creates leverage: shared dashboards and alert templates that every service inherits instead of rebuilding.",
+          "owner": "observability-platform",
+          "reviewBy": "2027-01-01"
+        }
+      ]
+    },
+    {
+      "$schema": "https://productbuildershq.com/schema/scale/v0/scale-domain.schema.json",
+      "id": "platform",
+      "name": "Platform Adoption",
+      "description": "Adoption and leverage of internal platform libraries across the organization's Go repositories. Measures how shared infrastructure (agent frameworks, utilities, tooling) is standardized, consumed, and creates leverage.",
+      "status": "active",
+      "owner": "platform-engineering",
+      "dimensions": [
+        {
+          "id": "platform-lifecycle",
+          "name": "Platform Library Lifecycle",
+          "description": "The journey of a platform library from inception to widespread leverage.",
+          "stages": [
+            {
+              "id": "foundation",
+              "name": "Foundation",
+              "description": "Library exists with clear API, documentation, and versioning."
+            },
+            {
+              "id": "adoption",
+              "name": "Adoption",
+              "description": "Teams discover and integrate the library into their services."
+            },
+            {
+              "id": "conformance",
+              "name": "Conformance",
+              "description": "Adopters use the library correctly per documented patterns."
+            },
+            {
+              "id": "leverage",
+              "name": "Leverage",
+              "description": "Shared improvements benefit all adopters; patterns compound."
+            },
+            {
+              "id": "evolution",
+              "name": "Evolution",
+              "description": "Breaking changes are managed; deprecations are smooth."
+            }
+          ]
+        }
+      ],
+      "capabilities": [
+        {
+          "id": "core-utilities",
+          "name": "Core Utilities Adoption",
+          "description": "Adoption of foundational utility libraries (mogo, gohttp, etc.) that provide common patterns for error handling, HTTP clients, configuration, and data structures.",
+          "status": "active",
+          "owner": "platform-engineering",
+          "stages": [
+            {
+              "dimension": "platform-lifecycle",
+              "stage": "foundation"
+            },
+            {
+              "dimension": "platform-lifecycle",
+              "stage": "adoption"
+            }
+          ],
+          "metrics": [
+            {
+              "id": "platform.standards.mogo-exists",
+              "name": "Core utilities library exists",
+              "description": "The mogo library provides documented, tested utilities for common Go patterns.",
+              "aspect": "standards",
+              "unit": "score",
+              "target": {
+                "value": 1,
+                "by": "2026-Q3",
+                "description": "Library exists with godoc, tests, and semver"
+              },
+              "owner": "platform-engineering",
+              "source": {
+                "system": "gogit",
+                "ref": "github.com/grokify/mogo"
+              }
+            },
+            {
+              "id": "platform.consumption.mogo-adoption",
+              "name": "Repos importing mogo",
+              "description": "Percentage of organization Go repositories that directly depend on github.com/grokify/mogo.",
+              "aspect": "consumption",
+              "consumptionKind": "adoption",
+              "unit": "percent",
+              "target": {
+                "value": 60,
+                "by": "2027-Q2"
+              },
+              "owner": "platform-engineering",
+              "source": {
+                "system": "gogit",
+                "ref": "gitscan dep github.com/grokify/mogo --direct-only"
+              }
+            },
+            {
+              "id": "platform.consumption.gohttp-adoption",
+              "name": "Repos importing gohttp",
+              "description": "Percentage of organization Go repositories that directly depend on github.com/grokify/gohttp.",
+              "aspect": "consumption",
+              "consumptionKind": "adoption",
+              "unit": "percent",
+              "target": {
+                "value": 40,
+                "by": "2027-Q2"
+              },
+              "owner": "platform-engineering",
+              "source": {
+                "system": "gogit",
+                "ref": "gitscan dep github.com/grokify/gohttp --direct-only"
+              }
+            }
+          ]
+        },
+        {
+          "id": "agent-framework",
+          "name": "AI Agent Framework Adoption",
+          "description": "Adoption of the omniagent framework for building AI-powered agents with consistent patterns for tool handling, context management, and model integration.",
+          "status": "active",
+          "owner": "platform-engineering",
+          "stages": [
+            {
+              "dimension": "platform-lifecycle",
+              "stage": "foundation"
+            },
+            {
+              "dimension": "platform-lifecycle",
+              "stage": "adoption"
+            },
+            {
+              "dimension": "platform-lifecycle",
+              "stage": "leverage"
+            }
+          ],
+          "metrics": [
+            {
+              "id": "platform.standards.omniagent-exists",
+              "name": "Agent framework exists",
+              "description": "The omniagent library provides a documented, tested framework for building AI agents.",
+              "aspect": "standards",
+              "unit": "score",
+              "target": {
+                "value": 1,
+                "by": "2026-Q3",
+                "description": "Framework exists with godoc, tests, and examples"
+              },
+              "owner": "platform-engineering",
+              "source": {
+                "system": "gogit",
+                "ref": "github.com/plexusone/omniagent"
+              }
+            },
+            {
+              "id": "platform.consumption.omniagent-adoption",
+              "name": "Repos importing omniagent",
+              "description": "Count of organization Go repositories that directly depend on github.com/plexusone/omniagent.",
+              "aspect": "consumption",
+              "consumptionKind": "adoption",
+              "unit": "count",
+              "target": {
+                "value": 5,
+                "by": "2027-Q2"
+              },
+              "owner": "platform-engineering",
+              "source": {
+                "system": "gogit",
+                "ref": "gitscan dep github.com/plexusone/omniagent --direct-only"
+              }
+            },
+            {
+              "id": "platform.leverage.omniagent-tools-reused",
+              "name": "Shared tools across agents",
+              "description": "Number of tool implementations in omniagent/tools that are reused by multiple agent projects.",
+              "aspect": "leverage",
+              "unit": "count",
+              "target": {
+                "value": 10,
+                "by": "2027-Q2"
+              },
+              "owner": "platform-engineering",
+              "source": {
+                "system": "code-analysis",
+                "ref": "omniagent/tools"
+              }
+            }
+          ]
+        },
+        {
+          "id": "initiative-tracking",
+          "name": "Initiative Tracking Adoption",
+          "description": "Adoption of VisionStudio for tracking initiatives, roadmaps, and engineering metrics across projects.",
+          "status": "active",
+          "owner": "platform-engineering",
+          "stages": [
+            {
+              "dimension": "platform-lifecycle",
+              "stage": "foundation"
+            },
+            {
+              "dimension": "platform-lifecycle",
+              "stage": "adoption"
+            }
+          ],
+          "metrics": [
+            {
+              "id": "platform.standards.visionstudio-exists",
+              "name": "Initiative tracking system exists",
+              "description": "VisionStudio provides initiative, phase, and RMI tracking with dashboard visualization.",
+              "aspect": "standards",
+              "unit": "score",
+              "target": {
+                "value": 1,
+                "by": "2026-Q3"
+              },
+              "owner": "platform-engineering",
+              "source": {
+                "system": "gogit",
+                "ref": "github.com/ProductBuildersHQ/visionstudio"
+              }
+            },
+            {
+              "id": "platform.consumption.visionstudio-repos-tracked",
+              "name": "Repositories tracked in VisionStudio",
+              "description": "Number of repositories registered and actively tracked in VisionStudio.",
+              "aspect": "consumption",
+              "consumptionKind": "adoption",
+              "unit": "count",
+              "target": {
+                "value": 20,
+                "by": "2027-Q2"
+              },
+              "owner": "platform-engineering",
+              "source": {
+                "system": "visionstudio",
+                "ref": "api/execution.repositories"
+              }
+            },
+            {
+              "id": "platform.consumption.initiatives-with-roadmaps",
+              "name": "Initiatives with ROADMAP.md",
+              "description": "Percentage of tracked initiatives that have a structured ROADMAP.md with RMIs.",
+              "aspect": "consumption",
+              "consumptionKind": "conformance",
+              "unit": "percent",
+              "target": {
+                "value": 80,
+                "by": "2027-Q2"
+              },
+              "owner": "platform-engineering",
+              "source": {
+                "system": "visionstudio",
+                "ref": "api/execution.initiatives"
+              }
+            }
+          ]
+        },
+        {
+          "id": "git-tooling",
+          "name": "Git Tooling Adoption",
+          "description": "Adoption of gogit for repository scanning, dependency analysis, and commit statistics.",
+          "status": "active",
+          "owner": "platform-engineering",
+          "stages": [
+            {
+              "dimension": "platform-lifecycle",
+              "stage": "foundation"
+            },
+            {
+              "dimension": "platform-lifecycle",
+              "stage": "adoption"
+            },
+            {
+              "dimension": "platform-lifecycle",
+              "stage": "leverage"
+            }
+          ],
+          "metrics": [
+            {
+              "id": "platform.standards.gogit-exists",
+              "name": "Git tooling library exists",
+              "description": "The gogit library provides repository discovery, commit parsing, and dependency analysis.",
+              "aspect": "standards",
+              "unit": "score",
+              "target": {
+                "value": 1,
+                "by": "2026-Q3"
+              },
+              "owner": "platform-engineering",
+              "source": {
+                "system": "gogit",
+                "ref": "github.com/grokify/gogit"
+              }
+            },
+            {
+              "id": "platform.consumption.gogit-adoption",
+              "name": "Repos importing gogit",
+              "description": "Count of organization Go repositories that directly depend on github.com/grokify/gogit.",
+              "aspect": "consumption",
+              "consumptionKind": "adoption",
+              "unit": "count",
+              "target": {
+                "value": 3,
+                "by": "2027-Q2"
+              },
+              "owner": "platform-engineering",
+              "source": {
+                "system": "gogit",
+                "ref": "gitscan dep github.com/grokify/gogit --direct-only"
+              }
+            },
+            {
+              "id": "platform.automation.gitscan-ci",
+              "name": "Repos with gitscan in CI",
+              "description": "Count of repositories using gitscan for pre-push validation or dependency ordering.",
+              "aspect": "automation",
+              "unit": "count",
+              "target": {
+                "value": 5,
+                "by": "2027-Q2"
+              },
+              "owner": "platform-engineering",
+              "source": {
+                "system": "ci",
+                "ref": "workflow-analysis"
+              }
+            }
+          ]
+        },
+        {
+          "id": "scale-metrics",
+          "name": "SCALE Metrics Adoption",
+          "description": "Adoption of the SCALE framework for measuring and narrating platform maturity.",
+          "status": "active",
+          "owner": "platform-engineering",
+          "stages": [
+            {
+              "dimension": "platform-lifecycle",
+              "stage": "foundation"
+            },
+            {
+              "dimension": "platform-lifecycle",
+              "stage": "adoption"
+            }
+          ],
+          "metrics": [
+            {
+              "id": "platform.standards.scale-exists",
+              "name": "SCALE framework exists",
+              "description": "The SCALE library provides framework, domain, and assessment modeling with rollup computation.",
+              "aspect": "standards",
+              "unit": "score",
+              "target": {
+                "value": 1,
+                "by": "2026-Q3"
+              },
+              "owner": "platform-engineering",
+              "source": {
+                "system": "gogit",
+                "ref": "github.com/ProductBuildersHQ/scale"
+              }
+            },
+            {
+              "id": "platform.consumption.scale-domains",
+              "name": "SCALE domains defined",
+              "description": "Number of SCALE domains with active capabilities and metrics.",
+              "aspect": "consumption",
+              "consumptionKind": "adoption",
+              "unit": "count",
+              "target": {
+                "value": 5,
+                "by": "2027-Q2"
+              },
+              "owner": "platform-engineering",
+              "source": {
+                "system": "scale",
+                "ref": "catalog/domains"
+              }
+            },
+            {
+              "id": "platform.consumption.scale-assessments",
+              "name": "SCALE assessments per quarter",
+              "description": "Number of SCALE assessments produced per quarter with journey narratives.",
+              "aspect": "consumption",
+              "consumptionKind": "conformance",
+              "unit": "count",
+              "target": {
+                "value": 4,
+                "by": "2027-Q2",
+                "description": "Quarterly assessment cadence"
+              },
+              "owner": "platform-engineering",
+              "source": {
+                "system": "scale",
+                "ref": "assessments"
+              }
+            }
+          ]
+        },
+        {
+          "id": "dependency-health",
+          "name": "Dependency Health",
+          "description": "Cross-cutting metrics on dependency hygiene across the organization's Go repositories.",
+          "status": "active",
+          "owner": "platform-engineering",
+          "stages": [
+            {
+              "dimension": "platform-lifecycle",
+              "stage": "conformance"
+            },
+            {
+              "dimension": "platform-lifecycle",
+              "stage": "evolution"
+            }
+          ],
+          "metrics": [
+            {
+              "id": "platform.consumption.repos-no-replace",
+              "name": "Repos without replace directives",
+              "description": "Percentage of Go repositories with no local replace directives in go.mod.",
+              "aspect": "consumption",
+              "consumptionKind": "conformance",
+              "unit": "percent",
+              "target": {
+                "value": 95,
+                "by": "2027-Q2"
+              },
+              "owner": "platform-engineering",
+              "source": {
+                "system": "gogit",
+                "ref": "gitscan --format table"
+              }
+            },
+            {
+              "id": "platform.consumption.repos-module-match",
+              "name": "Repos with matching module names",
+              "description": "Percentage of Go repositories where go.mod module name matches the directory structure.",
+              "aspect": "consumption",
+              "consumptionKind": "conformance",
+              "unit": "percent",
+              "target": {
+                "value": 100,
+                "by": "2027-Q2"
+              },
+              "owner": "platform-engineering",
+              "source": {
+                "system": "gogit",
+                "ref": "gitscan --format table"
+              }
+            },
+            {
+              "id": "platform.automation.dependency-order-ci",
+              "name": "Release order automated",
+              "description": "Whether gitscan order is used to determine correct release order for interdependent modules.",
+              "aspect": "automation",
+              "unit": "score",
+              "target": {
+                "value": 1,
+                "by": "2027-Q2"
+              },
+              "owner": "platform-engineering",
+              "source": {
+                "system": "ci",
+                "ref": "release-workflow"
+              }
+            },
+            {
+              "id": "platform.effectiveness.dependency-conflicts",
+              "name": "Dependency conflicts per quarter",
+              "description": "Count of incidents caused by version conflicts or incompatible transitive dependencies.",
+              "aspect": "effectiveness",
+              "unit": "count",
+              "direction": "lower_is_better",
+              "target": {
+                "value": 0,
+                "by": "2027-Q2"
+              },
+              "owner": "platform-engineering",
+              "source": {
+                "system": "incident-tracker",
+                "ref": "label:dependency-conflict"
+              }
+            }
+          ]
+        },
+        {
+          "id": "platform-leverage",
+          "name": "Platform Leverage",
+          "description": "Cross-cutting metrics measuring the compound value created by platform adoption.",
+          "status": "active",
+          "owner": "platform-engineering",
+          "stages": [
+            {
+              "dimension": "platform-lifecycle",
+              "stage": "leverage"
+            }
+          ],
+          "metrics": [
+            {
+              "id": "platform.leverage.shared-deps-ratio",
+              "name": "Internal dependency ratio",
+              "description": "Average ratio of internal (organization) dependencies to external dependencies per repository.",
+              "aspect": "leverage",
+              "unit": "percent",
+              "target": {
+                "value": 30,
+                "by": "2027-Q2",
+                "description": "30% of deps are internal platform libs"
+              },
+              "owner": "platform-engineering",
+              "source": {
+                "system": "gogit",
+                "ref": "dependency-analysis"
+              }
+            },
+            {
+              "id": "platform.leverage.code-reuse-loc",
+              "name": "Lines of code reused via platform libs",
+              "description": "Estimated lines of code not written because platform libraries provide the functionality.",
+              "aspect": "leverage",
+              "unit": "count",
+              "target": {
+                "value": 50000,
+                "by": "2027-Q2"
+              },
+              "owner": "platform-engineering",
+              "source": {
+                "system": "code-analysis",
+                "ref": "loc-saved"
+              }
+            },
+            {
+              "id": "platform.effectiveness.platform-bugs-fixed-once",
+              "name": "Bugs fixed once, benefit all",
+              "description": "Count of bugs fixed in platform libraries that automatically benefited all adopters via version bump.",
+              "aspect": "effectiveness",
+              "unit": "count",
+              "target": {
+                "value": 20,
+                "by": "2027-Q2"
+              },
+              "owner": "platform-engineering",
+              "source": {
+                "system": "changelog",
+                "ref": "fix commits"
+              }
+            }
+          ]
+        }
+      ],
+      "narratives": [
+        {
+          "id": "platform-thesis",
+          "kind": "thesis",
+          "title": "Why platform adoption matters",
+          "body": "Every team building infrastructure from scratch is duplicating effort and diverging from proven patterns. Platform libraries encode best practices once and let every adopter benefit from fixes, optimizations, and new capabilities. Measuring adoption via dependency analysis makes the platform story concrete: we know exactly which repos consume which libraries, and can track adoption growth over time. High adoption with low conformance signals integration problems; low adoption signals discovery or onboarding gaps.",
+          "owner": "platform-engineering",
+          "reviewBy": "2027-01-01"
+        }
+      ]
+    },
+    {
+      "$schema": "https://productbuildershq.com/schema/scale/v0/scale-domain.schema.json",
+      "id": "security",
+      "name": "Security Best Practices",
+      "description": "AI-era application security platformized across the delivery lifecycle: from AI threat modeling at design time to an AI-augmented SOC in operations.",
+      "status": "draft",
+      "owner": "security-engineering",
+      "dimensions": [
+        {
+          "id": "security-lifecycle",
+          "name": "Security Lifecycle",
+          "description": "AI-native security across the software delivery lifecycle.",
+          "stages": [
+            {
+              "id": "design-planning",
+              "name": "Design \u0026 Planning",
+              "description": "AI Threat Modeling: architecture reviews, security requirements, and risk analysis at design time.",
+              "narratives": [
+                {
+                  "id": "security-stage-design-thesis",
+                  "kind": "thesis",
+                  "body": "Threat modeling has historically been rationed — a scarce expert activity reserved for critical systems. AI collapses its cost, so every service can have a current threat model. The measure of this stage is coverage: threat modeling as a default, not an exception.",
+                  "owner": "security-engineering",
+                  "reviewBy": "2027-01-01"
+                }
+              ]
+            },
+            {
+              "id": "development",
+              "name": "Development",
+              "description": "Defensive Hygiene: secure coding, dependency management, and secrets management during implementation."
+            },
+            {
+              "id": "cicd-pipeline",
+              "name": "CI/CD Pipeline",
+              "description": "Automated Posture: SAST, SCA, secrets detection, SBOM generation, and policy enforcement in the pipeline."
+            },
+            {
+              "id": "offensive-validation",
+              "name": "Offensive Validation",
+              "description": "AI Pentesting \u0026 Red Teams: adversary simulation and validation exercises, augmented and scaled by AI."
+            },
+            {
+              "id": "operations",
+              "name": "Operations",
+              "description": "AI SOC / CSIRT / PSIRT: AI-augmented detection, incident response, and product security response."
+            }
+          ]
+        }
+      ],
+      "capabilities": [
+        {
+          "id": "ai-threat-modeling",
+          "name": "AI Threat Modeling",
+          "description": "Services carry current, AI-assisted threat models reviewed at design time.",
+          "status": "draft",
+          "owner": "security-engineering",
+          "stages": [
+            {
+              "dimension": "security-lifecycle",
+              "stage": "design-planning"
+            }
+          ],
+          "metrics": [
+            {
+              "id": "sec.consumption.threat-model-coverage",
+              "name": "Services with current threat models",
+              "description": "Percentage of production services with a threat model updated within the last two quarters.",
+              "aspect": "consumption",
+              "consumptionKind": "adoption",
+              "unit": "percent",
+              "target": {
+                "value": 80,
+                "by": "2027-Q2"
+              },
+              "owner": "security-engineering",
+              "source": {
+                "system": "threat-model-registry",
+                "ref": "freshness-check"
+              }
+            }
+          ],
+          "frameworks": [
+            {
+              "framework": "NIST_CSF_2",
+              "controls": [
+                "ID.RA"
+              ],
+              "description": "Risk assessment."
+            }
+          ]
+        },
+        {
+          "id": "automated-posture",
+          "name": "Automated Pipeline Posture",
+          "description": "Security scanning (SAST, SCA, secrets) runs and blocks in every delivery pipeline.",
+          "status": "draft",
+          "owner": "security-engineering",
+          "stages": [
+            {
+              "dimension": "security-lifecycle",
+              "stage": "cicd-pipeline"
+            }
+          ],
+          "metrics": [
+            {
+              "id": "sec.automation.pipeline-gates",
+              "name": "Pipelines with blocking security gates",
+              "description": "Percentage of delivery pipelines where SAST, SCA, and secrets detection run as blocking gates.",
+              "aspect": "automation",
+              "unit": "percent",
+              "target": {
+                "value": 90,
+                "by": "2027-Q2"
+              },
+              "owner": "security-engineering",
+              "source": {
+                "system": "ci",
+                "ref": "pipeline-config"
+              }
+            }
+          ],
+          "frameworks": [
+            {
+              "framework": "NIST_CSF_2",
+              "controls": [
+                "PR.PS"
+              ],
+              "description": "Platform security."
+            },
+            {
+              "framework": "OWASP",
+              "description": "OWASP ASVS verification via pipeline automation."
+            }
+          ]
+        },
+        {
+          "id": "ai-security-operations",
+          "name": "AI Security Operations",
+          "description": "AI-augmented SOC, CSIRT, and PSIRT: triage, enrichment, and response assisted by AI agents.",
+          "status": "draft",
+          "owner": "security-engineering",
+          "stages": [
+            {
+              "dimension": "security-lifecycle",
+              "stage": "operations"
+            }
+          ],
+          "metrics": [
+            {
+              "id": "sec.effectiveness.incident-mttr",
+              "name": "Security incident mean time to restore",
+              "description": "Mean time to contain and restore for security incidents, in hours.",
+              "aspect": "effectiveness",
+              "unit": "hours",
+              "direction": "lower_is_better",
+              "target": {
+                "value": 24,
+                "by": "2027-Q2"
+              },
+              "owner": "security-engineering",
+              "source": {
+                "system": "incident-tracker",
+                "ref": "security-mttr"
+              }
+            }
+          ],
+          "frameworks": [
+            {
+              "framework": "NIST_CSF_2",
+              "controls": [
+                "DE",
+                "RS"
+              ],
+              "description": "Detect and Respond functions."
+            }
+          ]
+        }
+      ],
+      "narratives": [
+        {
+          "id": "security-thesis",
+          "kind": "thesis",
+          "title": "The AI-era security story",
+          "body": "Compliance frameworks like NIST CSF tell the auditor's story. This dimension tells the transformation story: security is shifting from human gatekeeping at a few chokepoints to AI-native practice at every lifecycle stage — AI threat modeling in design, defensive hygiene in development, automated posture in the pipeline, AI pentesting and red teams for offensive validation, and an AI-augmented SOC/CSIRT/PSIRT in operations. The maturity of each stage, read left to right, is the journey.",
+          "owner": "security-engineering",
+          "reviewBy": "2027-01-01"
+        }
+      ]
+    }
+  ],
+  "externalModels": [
+    {
+      "$schema": "https://productbuildershq.com/schema/scale/v0/scale-external-model.schema.json",
+      "id": "aws-observability-maturity",
+      "name": "AWS Observability Maturity Model",
+      "publisher": "AWS",
+      "domain": "observability",
+      "description": "AWS's four-stage observability maturity model from the AWS Observability Best Practices guide. Levels are the source's own; the PRISM crosswalk is an explicit SCALE mapping, not part of the AWS model.",
+      "sourceUrl": "https://aws-observability.github.io/observability-best-practices/guides/observability-maturity-model/",
+      "retrievedAt": "2026-07-21",
+      "interpretation": "normalized",
+      "levels": [
+        {
+          "id": "foundational",
+          "ordinal": 1,
+          "name": "Foundational monitoring",
+          "description": "Basic monitoring exists in inconsistent forms across teams; no defined strategy for a complete view of applications across the organization.",
+          "prismLevel": 2
+        },
+        {
+          "id": "intermediate",
+          "ordinal": 2,
+          "name": "Intermediate monitoring",
+          "description": "More sophisticated practices adopted: proactive alerting and distributed tracing provide insight into interactions between systems.",
+          "prismLevel": 3
+        },
+        {
+          "id": "advanced",
+          "ordinal": 3,
+          "name": "Advanced observability",
+          "description": "Automated remediation plus AI/ML-driven anomaly detection and root-cause analysis enable corrective action before end-user impact.",
+          "prismLevel": 4
+        },
+        {
+          "id": "proactive",
+          "ordinal": 4,
+          "name": "Proactive observability",
+          "description": "Proactive and predictive observability practices with advanced automation.",
+          "prismLevel": 5
+        }
+      ]
+    },
+    {
+      "$schema": "https://productbuildershq.com/schema/scale/v0/scale-external-model.schema.json",
+      "id": "newrelic-observability-maturity",
+      "name": "New Relic Observability Maturity",
+      "publisher": "New Relic",
+      "domain": "observability",
+      "description": "New Relic's observability maturity series organizes practice by value drivers (intelligent observability as the Level 0 foundation, then business uptime, digital experience, engineering excellence), each progressing reactive → proactive → mastery. This codification normalizes that structure onto a single ladder; the source organizes by value driver, and the PRISM crosswalk is an explicit SCALE mapping, not part of the New Relic model. Note: New Relic documentation content is published under CC BY-NC-SA — this file intentionally carries only level structure and short paraphrases with attribution.",
+      "sourceUrl": "https://docs.newrelic.com/docs/new-relic-solutions/observability-maturity/introduction/",
+      "retrievedAt": "2026-07-21",
+      "interpretation": "normalized",
+      "levels": [
+        {
+          "id": "foundation",
+          "ordinal": 0,
+          "name": "Level 0 — Intelligent observability foundation",
+          "description": "The essential foundation (instrumentation and platform capability) that enables all other observability value drivers.",
+          "prismLevel": 2
+        },
+        {
+          "id": "reactive",
+          "ordinal": 1,
+          "name": "Reactive",
+          "description": "Value-driver practices applied reactively — responding to problems after they surface.",
+          "prismLevel": 3
+        },
+        {
+          "id": "proactive",
+          "ordinal": 2,
+          "name": "Proactive",
+          "description": "Practices applied proactively — anticipating and preventing problems.",
+          "prismLevel": 4
+        },
+        {
+          "id": "mastery",
+          "ordinal": 3,
+          "name": "Mastery",
+          "description": "Mature, continuously improving practice tied to measurable business value.",
+          "prismLevel": 5
+        }
+      ]
+    }
+  ]
+}
