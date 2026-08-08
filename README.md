@@ -92,10 +92,11 @@ Catalogs are stored as `framework.json` + `domains/*.json` and assembled by `Loa
 
 ## Reference Catalog
 
-The embedded reference catalog (`catalog/`) seeds three domains:
+The embedded reference catalog (`catalog/`) seeds four domains:
 
 - **api** (active) — anchored by [api-style-spec](https://github.com/plexusone/api-style-spec): rule coverage (S), linting enrollment (C-adoption), silver conformance pass rate (C-conformance), blocking CI validation (A), generated SDKs (L), unplanned breaking changes (E).
 - **observability** (active) — OpenTelemetry/Prometheus adoption, Golden Signals and RED/USE conformance, auto-instrumentation, template dashboards, MTTR and alert-based incident detection.
+- **platform** (active) — adoption and leverage of internal platform libraries across the organization's Go repositories, measured via dependency analysis: library existence (S), per-library adoption rates (C-adoption), and the reuse leverage they create (L).
 - **security** (draft) — the AI-era security lifecycle as the worked example of a domain dimension: AI Threat Modeling → Defensive Hygiene → Automated Posture → AI Pentesting & Red Teams → AI SOC/CSIRT/PSIRT.
 
 ```go
@@ -134,6 +135,8 @@ go run ./cmd/scale report \
   -prev examples/assessments/2026-q2.json \
   -o examples/scale-report-2026-q3.html
 ```
+
+The same computation is also available as a **JSON intermediate representation** (`ReportIR`) — all aspect scores, movers, domain breakdowns, and coverage without the source `Framework`/`Assessment`. Use `report.JSON` to emit it, `report.BuildIR` to build it, and `report.HTMLFromIR` to render HTML from a cached or externally-built IR (so the report can be cached, served as JSON, or rendered in more than one format from a single computation).
 
 The report is a pyramid, so hundreds of metrics read as a handful of sentences:
 
@@ -175,6 +178,13 @@ Note: scale deliberately does **not** import prism-capability or prism-maturity.
 - **Capabilities are canonical; frameworks are projections.** A metric maps to external frameworks (DORA, NIST CSF, OWASP, ...) via `frameworks` mappings (shared `prism-core` `FrameworkMapping` type) without belonging to them — evidence is collected once and interpreted many times.
 - **PRISM assesses; SCALE narrates.** Capabilities link to prism-capability entries and prism-maturity domains/SLIs via `prism` refs, including expected evidence per maturity level (M1–M5).
 - Compliance frameworks tell the auditor's story; SCALE's domain dimensions tell the transformation story. Same capabilities, same evidence, two projections.
+
+## Documentation
+
+Full documentation — getting started, the five aspects, information model,
+catalog authoring, reports, and the framework/assessment reference — is published
+at **[productbuildershq.com/scale](https://productbuildershq.com/scale)** (MkDocs
+site under [`docs/`](docs/)).
 
 ## Status
 
