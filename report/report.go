@@ -56,6 +56,203 @@ func HTML(f *scale.Framework, curr *scale.Assessment, opts *Options) ([]byte, er
 	return buf.Bytes(), nil
 }
 
+// HTMLFromIR renders the story report from a pre-built ReportIR.
+// Use this when you have a cached or externally-built IR.
+func HTMLFromIR(ir *ReportIR) ([]byte, error) {
+	data := irToReportData(ir)
+
+	tmpl, err := template.New("report").Funcs(funcMap()).Parse(reportTemplate)
+	if err != nil {
+		return nil, fmt.Errorf("parsing template: %w", err)
+	}
+	var buf bytes.Buffer
+	if err := tmpl.Execute(&buf, data); err != nil {
+		return nil, fmt.Errorf("executing template: %w", err)
+	}
+	return buf.Bytes(), nil
+}
+
+// irToReportData converts a ReportIR back to the internal reportData format
+// needed by the HTML template.
+func irToReportData(ir *ReportIR) *reportData {
+	data := &reportData{
+		Framework: &scale.Framework{
+			ID:          ir.Framework.ID,
+			Name:        ir.Framework.Name,
+			Description: ir.Framework.Description,
+		},
+		Period:      ir.Period,
+		PrevPeriod:  ir.PrevPeriod,
+		GeneratedAt: ir.GeneratedAt,
+		Excluded:    ir.Coverage.Excluded,
+		Missing:     ir.Coverage.Missing,
+	}
+
+	// Convert framework narratives
+	for _, n := range ir.Framework.Narratives {
+		data.Narratives = append(data.Narratives, scale.NarrativeBlock{
+			ID:    n.ID,
+			Kind:  n.Kind,
+			Title: n.Title,
+			Body:  n.Body,
+			Owner: n.Owner,
+		})
+	}
+
+	// Convert aspect tiles
+	for _, a := range ir.Aspects {
+		t := tile{
+			Letter: a.Letter,
+			Name:   a.Name,
+		}
+		if a.Score != nil {
+			t.HasScore = true
+			t.Score = *a.Score
+		}
+		if a.Delta != nil {
+			t.HasDelta = true
+			t.Delta = *a.Delta
+		}
+		data.Tiles = append(data.Tiles, t)
+	}
+
+	// Convert movers
+	for _, m := range ir.Movers {
+		data.Movers = append(data.Movers, mover{
+			Domain:        m.Domain,
+			Aspect:        m.Aspect,
+			AspectLetter:  m.AspectLetter,
+			Prev:          m.Prev,
+			Curr:          m.Curr,
+			Delta:         m.Delta,
+			Contributions: m.Contributions,
+		})
+	}
+
+	// Convert domains
+	for _, d := range ir.Domains {
+		dv := domainView{
+			Domain: &scale.Domain{
+				ID:          d.ID,
+				Name:        d.Name,
+				Description: d.Description,
+				Status:      d.Status,
+			},
+			Maturity: d.Maturity,
+		}
+
+		// Convert narratives
+		for _, n := range d.Narratives {
+			nb := scale.NarrativeBlock{
+				ID:    n.ID,
+				Kind:  n.Kind,
+				Title: n.Title,
+				Body:  n.Body,
+				Owner: n.Owner,
+			}
+			if n.Kind == scale.NarrativeThesis {
+				dv.Thesis = append(dv.Thesis, nb)
+			} else {
+				dv.Journey = append(dv.Journey, nb)
+			}
+		}
+
+		// Convert dimensions
+		for _, dim := range d.Dimensions {
+			dd := scale.DomainDimension{
+				ID:          dim.ID,
+				Name:        dim.Name,
+				Description: dim.Description,
+			}
+			for _, s := range dim.Stages {
+				dd.Stages = append(dd.Stages, scale.Stage{
+					ID:          s.ID,
+					Name:        s.Name,
+					Description: s.Description,
+				})
+			}
+			dv.Dimensions = append(dv.Dimensions, dd)
+		}
+
+		// Convert aspect bars
+		for _, a := range d.Aspects {
+			bar := aspectBar{
+				Letter: a.Letter,
+				Name:   a.Name,
+			}
+			if a.Score != nil {
+				bar.Score = *a.Score
+			}
+			if a.Delta != nil {
+				bar.HasDelta = true
+				bar.Delta = *a.Delta
+			}
+			dv.Bars = append(dv.Bars, bar)
+		}
+
+		// Convert capabilities to groups
+		for _, c := range d.Capabilities {
+			if len(c.Metrics) == 0 {
+				continue
+			}
+			g := capGroup{
+				Name:     c.Name,
+				Maturity: c.Maturity,
+			}
+			for _, m := range c.Metrics {
+				row := metricRow{
+					Name:         m.Name,
+					AspectLetter: m.AspectLetter,
+					AspectName:   m.Aspect,
+					Kind:         m.ConsumptionKind,
+					Value:        m.Value,
+					Target:       m.Target,
+					Owner:        m.Owner,
+					Note:         m.Note,
+					Maturity:     m.Maturity,
+				}
+				if m.Attainment != nil {
+					row.HasAttain = true
+					row.Attain = *m.Attainment
+				}
+				g.Rows = append(g.Rows, row)
+			}
+			dv.Groups = append(dv.Groups, g)
+		}
+
+		// Convert external models
+		for _, em := range d.ExternalModels {
+			lv := lensView{
+				Model: &scale.ExternalModel{
+					ID:          em.ID,
+					Name:        em.Name,
+					Publisher:   em.Publisher,
+					SourceURL:         em.URL,
+					Description: em.Description,
+				},
+			}
+			for _, l := range em.Levels {
+				lr := lensRow{
+					Level: &scale.ExternalLevel{
+						ID:          l.ID,
+						Name:        l.Name,
+						Description: l.Description,
+					},
+					PRISM:        l.PRISMLevel,
+					Current:      l.IsCurrent,
+					Capabilities: l.Capabilities,
+				}
+				lv.Rows = append(lv.Rows, lr)
+			}
+			dv.Lenses = append(dv.Lenses, lv)
+		}
+
+		data.Domains = append(data.Domains, dv)
+	}
+
+	return data
+}
+
 type reportData struct {
 	Framework   *scale.Framework
 	Period      string
